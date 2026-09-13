@@ -11,6 +11,7 @@ export default defineConfig({
 
     // Search Engines & Indexing
     ['meta', { name: 'robots', content: 'index, follow' }],
+    ['meta', { name: 'google-site-verification', content: 'O9wKCsyFHXYApIeFGMjG-vNUHP2GMgvwhjX9ImziUos' }],
     ['meta', { name: 'author', content: 'Rafa Dito / Royal Engine Studio' }],
 
     // OpenGraph Social Sharing (Global)
