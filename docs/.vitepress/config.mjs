@@ -26,6 +26,105 @@ export default defineConfig({
     ['meta', { name: 'twitter:image', content: '/og-image.png' }]
   ],
 
+  sitemap: {
+    hostname: 'https://leavesguardian.enginelabs.my.id'
+  },
+
+  transformHead({ pageData }) {
+    const head = [];
+    const relativePath = pageData.relativePath || '';
+    
+    // Calculate normalized clean path for canonical URL
+    let cleanPath = relativePath.replace(/(^|\/)index\.md$/, '$1').replace(/\.md$/, '');
+    if (cleanPath.startsWith('/')) cleanPath = cleanPath.slice(1);
+    
+    const canonicalUrl = cleanPath 
+      ? `https://leavesguardian.enginelabs.my.id/${cleanPath}` 
+      : 'https://leavesguardian.enginelabs.my.id/';
+
+    // Page-specific Canonical URL
+    head.push(['link', { rel: 'canonical', href: canonicalUrl }]);
+
+    // Verified EN <-> ID Pairings Map (25 verified parallel routes)
+    const enToIdPairMap = {
+      '': 'id/',
+      'en/': 'id/',
+      'en/getting-started/overview': 'id/quickstart/overview',
+      'en/getting-started/quickstart': 'id/quickstart/quickstart',
+      'en/getting-started/architecture': 'id/quickstart/architecture',
+      'en/messaging/schema': 'id/guides/schema',
+      'en/builders/overview': 'id/guides/builders',
+      'en/builders/handling-responses': 'id/guides/handling-responses',
+      'en/utilities/prompt': 'id/guides/prompts',
+      'en/utilities/autodelete': 'id/guides/autodelete',
+      'en/reliability/smartstore': 'id/guides/smartstore',
+      'en/reliability/session-recovery': 'id/reliability/session-recovery',
+      'en/reliability/health-monitor': 'id/reliability/health-monitor',
+      'en/reliability/watchdog': 'id/reliability/watchdog',
+      'en/reliability/memory-guard': 'id/reliability/memory-guard',
+      'en/traffic/traffic-controller': 'id/traffic/traffic-controller',
+      'en/traffic/rate-limiter': 'id/traffic/rate-limiter',
+      'en/traffic/deduplicator': 'id/traffic/deduplicator',
+      'en/media/media-pipeline': 'id/media/media-pipeline',
+      'en/terminal/presentation': 'id/terminal/presentation',
+      'en/terminal/privacy-scrubber': 'id/terminal/privacy-scrubber',
+      'en/terminal/custom-sinks': 'id/terminal/custom-sinks',
+      'en/api/leaves-client': 'id/api/leaves-client',
+      'en/api/builder-methods': 'id/api/builder-methods',
+      'en/api/subsystems': 'id/api/subsystems',
+      'en/api/errors': 'id/api/errors',
+      'en/recipes/production-bot': 'id/recipes/production'
+    };
+
+    // Inverse map for ID -> EN
+    const idToEnPairMap = {};
+    for (const [enPath, idPath] of Object.entries(enToIdPairMap)) {
+      idToEnPairMap[idPath] = enPath;
+    }
+
+    // Determine if current page has a verified counterpart for hreflang
+    if (relativePath === 'index.md') {
+      head.push(['link', { rel: 'alternate', hreflang: 'x-default', href: 'https://leavesguardian.enginelabs.my.id/' }]);
+      head.push(['link', { rel: 'alternate', hreflang: 'en', href: 'https://leavesguardian.enginelabs.my.id/en/' }]);
+      head.push(['link', { rel: 'alternate', hreflang: 'id', href: 'https://leavesguardian.enginelabs.my.id/id/' }]);
+    } else if (enToIdPairMap[cleanPath] !== undefined) {
+      const idTarget = enToIdPairMap[cleanPath];
+      head.push(['link', { rel: 'alternate', hreflang: 'en', href: `https://leavesguardian.enginelabs.my.id/${cleanPath}` }]);
+      head.push(['link', { rel: 'alternate', hreflang: 'id', href: `https://leavesguardian.enginelabs.my.id/${idTarget}` }]);
+      head.push(['link', { rel: 'alternate', hreflang: 'x-default', href: 'https://leavesguardian.enginelabs.my.id/' }]);
+    } else if (idToEnPairMap[cleanPath] !== undefined) {
+      const enTarget = idToEnPairMap[cleanPath];
+      head.push(['link', { rel: 'alternate', hreflang: 'id', href: `https://leavesguardian.enginelabs.my.id/${cleanPath}` }]);
+      head.push(['link', { rel: 'alternate', hreflang: 'en', href: `https://leavesguardian.enginelabs.my.id/${enTarget}` }]);
+      head.push(['link', { rel: 'alternate', hreflang: 'x-default', href: 'https://leavesguardian.enginelabs.my.id/' }]);
+    }
+
+    // Factual JSON-LD Structured Data for Root / Landing Pages
+    if (relativePath === 'index.md' || relativePath === 'en/index.md' || relativePath === 'id/index.md') {
+      const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareApplication',
+        'name': 'Leaves Guardian',
+        'applicationCategory': 'DeveloperApplication',
+        'operatingSystem': 'Node.js',
+        'description': 'Baileys wrapper and reliability layer for WhatsApp bots built with Node.js.',
+        'url': 'https://leavesguardian.enginelabs.my.id/',
+        'author': {
+          '@type': 'Person',
+          'name': 'Rafa Dito',
+          'worksFor': {
+            '@type': 'Organization',
+            'name': 'Royal Engine Studio'
+          }
+        },
+        'license': 'https://opensource.org/licenses/MIT'
+      };
+      head.push(['script', { type: 'application/ld+json' }, JSON.stringify(jsonLd)]);
+    }
+
+    return head;
+  },
+
   locales: {
     root: {
       label: 'English',
