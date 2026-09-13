@@ -344,7 +344,7 @@ export default defineConfig({
     siteTitle: 'Leaves Guardian',
     
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/royal-engine/leaves-guardian' },
+      { icon: 'github', link: 'https://github.com/ziakholder/Leaves-Guardian' },
       { icon: 'npm', link: 'https://www.npmjs.com/package/leaves-guardian' }
     ],
 
