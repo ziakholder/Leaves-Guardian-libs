@@ -74,7 +74,8 @@ export default defineConfig({
       'en/api/builder-methods': 'id/api/builder-methods',
       'en/api/subsystems': 'id/api/subsystems',
       'en/api/errors': 'id/api/errors',
-      'en/recipes/production-bot': 'id/recipes/production'
+      'en/recipes/production-bot': 'id/recipes/production',
+      'en/updates/patch-notes': 'id/updates/patch-notes'
     };
 
     // Inverse map for ID -> EN
@@ -145,7 +146,8 @@ export default defineConfig({
           { text: 'Guide', link: '/en/getting-started/overview' },
           { text: 'Builders', link: '/en/builders/overview' },
           { text: 'Reliability', link: '/en/reliability/smartstore' },
-          { text: 'API Reference', link: '/en/api/leaves-client' }
+          { text: 'API Reference', link: '/en/api/leaves-client' },
+          { text: 'Patch Notes', link: '/en/updates/patch-notes' }
         ],
         sidebar: {
           '/en/': [
@@ -246,6 +248,13 @@ export default defineConfig({
               items: [
                 { text: 'High-Availability Production Bot', link: '/en/recipes/production-bot' }
               ]
+            },
+            {
+              text: 'Updates & Release Notes',
+              collapsed: false,
+              items: [
+                { text: 'Native Flow & Silent Drop Patch', link: '/en/updates/patch-notes' }
+              ]
             }
           ]
         }
@@ -269,7 +278,8 @@ export default defineConfig({
           { text: 'Panduan Cepat', link: '/id/quickstart/overview' },
           { text: 'Message Builders', link: '/id/guides/builders' },
           { text: 'Recipes', link: '/id/recipes/production' },
-          { text: 'Referensi API', link: '/id/api/leaves-client' }
+          { text: 'Referensi API', link: '/id/api/leaves-client' },
+          { text: 'Update Patch', link: '/id/updates/patch-notes' }
         ],
         sidebar: {
           '/id/': [
@@ -332,6 +342,13 @@ export default defineConfig({
               collapsed: false,
               items: [
                 { text: 'Bot Produksi 24/7 Tahan Banting', link: '/id/recipes/production' }
+              ]
+            },
+            {
+              text: 'Pembaruan & Patch',
+              collapsed: false,
+              items: [
+                { text: 'Catatan Patch & Solusi Native Flow', link: '/id/updates/patch-notes' }
               ]
             }
           ]
