@@ -10,10 +10,11 @@ It supports multiple button types, including quick replies, URL click-throughs, 
 
 | Button Type | Method | Description |
 | :--- | :--- | :--- |
-| **Quick Reply** | `.addReply(text, id)` | Standard action button. Triggers a `BUTTON` event when clicked. |
+| **Quick Reply** | `.addReply(text, id)` | Standard action button. Triggers a `BUTTON` event with `id` when clicked. |
 | **CTA URL** | `.addUrl(text, url)` | Opens an external web link in the browser. |
-| **CTA Copy** | `.addCopy(text, code)` | Copies a text string or promo code to the user's clipboard. |
-| **CTA Call** | `.addCall(text, phone)` | Triggers a direct phone call intent on mobile devices. |
+| **CTA Copy** | `.addCopy(text, code)` | One-click copy of a text string, payment account, or promo code to clipboard. |
+| **Galaxy Flow** | `.addGalaxy(flowCtaText, opts)` | Navigation banner / aesthetic native flow button. |
+| **Limited Offer**| `.addLimitedOffer(text, opts)` | Promotional badge banner with expiration countdown timer. |
 
 ---
 

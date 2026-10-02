@@ -1,17 +1,18 @@
 # ListMessage Builder
 
-`ListMessage` constructs multi-section, interactive list selection menus (`single_select` native flow) for WhatsApp.
+`ListMessage` constructs multi-section, interactive list selection menus (`single_select` native flow) for WhatsApp with support for header media banners (image, video, document).
 
 It is ideal for presenting menus, service selections, settings, or multi-option catalogs.
 
 ---
 
-## Basic Example
+## Basic Example with Header Banner
 
 ```javascript
 import { ListMessage } from 'leaves-guardian';
 
 const list = new ListMessage(client)
+  .setImage('https://example.com/banner.jpg')
   .setTitle('🏪 {{storeName}}')
   .setBody('Hello {{name}}, please choose a category below:')
   .setFooter('Select an item to continue')
@@ -34,6 +35,9 @@ await client.sendMessage(msg.chat.id, list);
 
 | Method | Description |
 | :--- | :--- |
+| `.setImage(pathOrBuffer)` | Sets an image media banner for the list header. |
+| `.setVideo(pathOrBuffer)` | Sets a video media banner for the list header. |
+| `.setDocument(pathOrBuffer, opts)` | Sets a document attachment for the list header. |
 | `.setTitle(title)` | Sets the header title. |
 | `.setBody(body)` | Sets the message body. |
 | `.setFooter(footer)` | Sets the footer text. |
@@ -53,18 +57,14 @@ Each row in a section accepts:
 
 ## Capturing List Selection Responses
 
-When a user selects an item from the list, Leaves Guardian emits a `message` event with `msg.type === 'LIST'`:
+When a user selects an item from the list, Leaves Guardian normalizes the selection and emits a `message` event with `msg.type === 'LIST'`. `msg.text` automatically contains the chosen row `id`:
 
 ```javascript
 client.on('message', async (msg) => {
   if (msg.type === 'LIST') {
-    console.log('Selected Row Title:', msg.text);
+    console.log('Selected Row ID:', msg.text);
 
-    // Access the exact selectedRowId via msg.raw escape hatch
-    const selectedRowId = msg.raw?.message?.listResponseMessage?.singleSelectReply?.selectedRowId;
-    console.log('Selected Row ID:', selectedRowId);
-
-    if (selectedRowId === 'item_latte') {
+    if (msg.text === 'item_latte') {
       await client.sendText(msg.chat.id, '☕ One Vanilla Latte added to your order!');
     }
   }
@@ -76,5 +76,5 @@ client.on('message', async (msg) => {
 ## Related Documentation
 
 - **[Handling Interactive Responses](/en/builders/handling-responses)**: Full guide to interactive event parsing.
-- **[ButtonMessage Builder](/en/builders/button-message)**: Quick reply buttons.
+- **[ButtonMessage Builder](/en/builders/button-message)**: Quick reply and action buttons.
 - **[CarouselMessage Builder](/en/builders/carousel-message)**: Horizontal card carousel.

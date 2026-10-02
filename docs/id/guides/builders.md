@@ -52,9 +52,11 @@ builder
 import { ButtonMessage } from 'leaves-guardian';
 
 const button = new ButtonMessage(client)
+  .setImage('https://example.com/promo.jpg')
   .setTitle('Konfirmasi Pesanan')
   .setBody('Apakah Anda ingin memproses pembayaran sekarang?')
   .setFooter('Leaves Store')
+  .addGalaxy('╭━─ ⌜ PILIH MENU 」─━╮')
   .addReply('✅ Bayar Sekarang', 'btn_pay')
   .addCopy('📋 Salin Kode Promo', 'DISKON20')
   .addUrl('🌐 Buka Toko', 'https://example.com/store');
@@ -62,15 +64,16 @@ const button = new ButtonMessage(client)
 await client.sendMessage(msg.chat.id, button);
 ```
 
-### 2. Menu Pilihan List (`ListMessage`)
+### 2. Menu Pilihan List dengan Banner (`ListMessage`)
 
 ```javascript
 import { ListMessage } from 'leaves-guardian';
 
 const list = new ListMessage(client)
+  .setImage('https://example.com/banner-menu.jpg')
   .setTitle('Daftar Layanan')
   .setBody('Silakan pilih salah satu layanan kami:')
-  .setButtonText('Lihat Menu')
+  .setButtonText('📋 Lihat Menu')
   .addSection('Layanan Teknis', [
     { id: 'srv_bot', title: 'Pembuatan Bot WhatsApp', description: 'Integrasi kustom 24/7' },
     { id: 'srv_cloud', title: 'Cloud Hosting Server', description: 'Server VPS performa tinggi' }
