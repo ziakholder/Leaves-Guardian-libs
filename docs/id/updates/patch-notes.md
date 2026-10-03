@@ -1,4 +1,4 @@
-﻿# Catatan Update Patch: Solusi Native Flow & Silent Drop
+# Catatan Update Patch: Solusi Native Flow & Silent Drop
 
 Halaman ini mendokumentasikan pembaruan teknis terkait protokol **WhatsApp Multi-Device Native Flow** di Leaves Guardian untuk menyelesaikan kendala pesan interaktif (*List Menu & Button*) yang **hanya tampak di nomor bot (pengirim) namun tidak muncul di nomor pengguna (penerima)**.
 
@@ -49,8 +49,17 @@ viewOnceMessage: {
 }
 ```
 
-### 2. Direct Dispatching via `builder.send(targetJid)`
-Leaves Guardian menyediakan pipeline pengiriman mandiri yang langsung merakit `generateWAMessageFromContent` dan `relayMessage` dengan additional node `native_flow`.
+### 2. Binary Node Injection (`biz` & `bot biz_bot="1"`)
+WhatsApp menerapkan aturan ketat pada chat pribadi (1:1 / PC): jika pesan interaktif dikirim dari nomor non-official tanpa atribut bot, WhatsApp penerima menolak menampilkan tombol.
+Leaves Guardian kini otomatis menambahkan binary stanza:
+- **Private Chat (1:1):** Menyertakan node `<biz><interactive ... /></biz>` serta `<bot biz_bot="1" />`.
+- **Group Chat:** Menyertakan node `<biz><interactive ... /></biz>`.
+
+### 3. Socket Hook `patchMessageBeforeSending`
+Pada `ConnectionManager`, Leaves Guardian kini mendaftarkan hook `patchMessageBeforeSending` pada level Baileys socket untuk menjamin semua pesan berkategori interactive diproteksi dengan `deviceListMetadataVersion: 2` sebelum dienkripsi ke Signal protocol.
+
+### 4. Direct Dispatching via `builder.send(targetJid)`
+Leaves Guardian menyediakan pipeline pengiriman mandiri yang langsung merakit `generateWAMessageFromContent` dan `relayMessage` dengan binary nodes yang tepat.
 
 ---
 

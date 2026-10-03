@@ -1,4 +1,4 @@
-﻿# Patch Notes: Native Flow Interactive Messages & Silent Drop Fix
+# Patch Notes: Native Flow Interactive Messages & Silent Drop Fix
 
 This document details the critical technical patch addressing the **WhatsApp Multi-Device Native Flow Silent Drop** issue where interactive messages (*List Menus, Quick Reply Buttons, and Carousels*) **appeared in the bot sender outbox but were completely invisible on recipient devices**.
 
@@ -49,8 +49,17 @@ viewOnceMessage: {
 }
 ```
 
-### 2. Standalone Direct Relay via `builder.send(targetJid)`
-Leaves Guardian's builder `.send()` pipeline directly handles `generateWAMessageFromContent` and `relayMessage` with required `biz/interactive` nodes.
+### 2. Binary Node Injection (`biz` & `bot biz_bot="1"`)
+WhatsApp enforces strict validation for 1:1 private chats. When interactive messages originate from non-official numbers without bot tagging, the recipient client silently discards them.
+Leaves Guardian now automatically constructs dynamic binary stanzas:
+- **Private Chats (1:1 / PC):** Appends `<biz><interactive ... /></biz>` along with `<bot biz_bot="1" />`.
+- **Group Chats:** Appends `<biz><interactive ... /></biz>`.
+
+### 3. Socket Hook `patchMessageBeforeSending`
+Inside `ConnectionManager`, Leaves Guardian registers the `patchMessageBeforeSending` hook on the Baileys socket to guarantee all interactive message types are wrapped with `deviceListMetadataVersion: 2` before Signal E2EE encryption.
+
+### 4. Standalone Direct Relay via `builder.send(targetJid)`
+Leaves Guardian's builder `.send()` pipeline directly handles `generateWAMessageFromContent` and `relayMessage` with appropriate binary nodes.
 
 ---
 
