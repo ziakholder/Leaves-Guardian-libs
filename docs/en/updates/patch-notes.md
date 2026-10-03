@@ -101,6 +101,23 @@ await list.send(targetJid);
 
 ---
 
+## 🚀 Update v0.3.1: Single Tick Delivery Fix, TC-Token LID, & Signal PreKey Retries
+ 
+Update v0.3.1 solves the critical delivery issue where messages remained stuck on **Single Tick (Centang 1)** when sent to strangers or newly migrated numbers:
+
+### 1. JID `@lid` & TC-Token (`tctoken-xxx@lid.json`) Preservation
+- **Problem:** In WhatsApp 2025/2026, 1-on-1 private messages arrive as `@lid` format (e.g. `35120501268714:0@lid`). Force-converting this to `@s.whatsapp.net` causes Baileys to omit the Trusted Contact Token (`tctoken`), prompting WhatsApp server to reject delivery with Error **463 (NackCallerReachoutTimelocked)**.
+- **Leaves Guardian Fix:** `LeavesClient` sanitization now strips only the device index (`:0`, `:49` using `/:\d+@/gi`), preserving the `@lid` domain intact so security tokens are properly attached.
+
+### 2. Signal PreKey Retry Handshake (`msgRetryCounterCache` & `getMessage`)
+- **Problem:** When a recipient changes devices or re-keys E2EE sessions, WhatsApp requests a message key retry. Without a cache handler, Baileys ignores the retry and the message hangs in *Waiting for this message* / single tick.
+- **Leaves Guardian Fix:** `ConnectionManager` now embeds `MemoryRetryCache` (5-minute TTL) and automatic `getMessage` resolution from `rawMessageHistory`.
+
+### 3. Human Emulation & Anti-Ban Protection
+- Sockets default to `Browsers.macOS('Safari')`, `generateHighQualityLinkPreview: false`, and support read receipt auto-simulation (`readMessages`) and natural presence composing.
+
+---
+
 ## 📊 Compatibility Matrix
 
 | Message Type | WhatsApp Android | WhatsApp iOS | WhatsApp Web |
@@ -109,3 +126,4 @@ await list.send(targetJid);
 | **`ButtonMessage` (Quick Reply)** | 🟢 100% Rendered | 🟢 100% Rendered | 🟢 100% Rendered |
 | **`CarouselMessage` (Card Slider)** | 🟢 100% Rendered | 🟢 100% Rendered | 🟢 100% Rendered |
 | **`TextMessage`** | 🟢 100% Rendered | 🟢 100% Rendered | 🟢 100% Rendered |
+

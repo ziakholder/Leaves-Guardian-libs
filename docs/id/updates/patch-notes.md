@@ -101,6 +101,23 @@ await list.send(targetJid);
 
 ---
 
+## 🚀 Update v0.3.1: Solusi Centang 1, TC-Token LID, & Signal PreKey Retries
+
+Pembaruan v0.3.1 menyelesaikan masalah pengiriman pesan yang **hanya centang 1** pada nomor tertentu atau pengguna baru (stranger):
+
+### 1. Preservasi JID `@lid` & TC-Token (`tctoken-xxx@lid.json`)
+- **Masalah:** WhatsApp 2025/2026 mengirimkan pesan 1-on-1 dengan format LID (misal: `35120501268714:0@lid`). Jika dipaksa dikonversi ke `@s.whatsapp.net`, Baileys tidak akan menyertakan TC-Token (*Trusted Contact Token*), menyebabkan server WhatsApp menolak pesan dengan kode **463 (NackCallerReachoutTimelocked)**.
+- **Solusi Leaves Guardian:** Sanitasi JID di `LeavesClient` kini hanya membersihkan indeks device (`:0`, `:49` dengan regex `/:\d+@/gi`), tanpa memodifikasi domain `@lid`. Token keamanan terkirim utuh.
+
+### 2. Signal PreKey Retry Cache (`msgRetryCounterCache` & `getMessage`)
+- **Masalah:** Saat nomor penerima baru/berganti device, WhatsApp meminta pengiriman ulang kunci enkripsi. Tanpa retry cache, Baileys mengabaikan permintaan ini dan pesan terjebak di *Waiting for this message* / centang 1.
+- **Solusi Leaves Guardian:** `ConnectionManager` kini dilengkapi `MemoryRetryCache` (TTL 5 menit) dan handler `getMessage` otomatis dari buffer pesan `rawMessageHistory`.
+
+### 3. Human Emulation & Anti-Ban Protection
+- Pengaturan default socket kini menggunakan `Browsers.macOS('Safari')`, `generateHighQualityLinkPreview: false`, serta rekomendasi simulasi tanda baca (`readMessages`) dan status `composing`.
+
+---
+
 ## 📊 Status Kompatibilitas
 
 | Tipe Pesan | WhatsApp Android | WhatsApp iOS | WhatsApp Web |
@@ -109,3 +126,4 @@ await list.send(targetJid);
 | **`ButtonMessage` (Quick Reply)** | 🟢 100% Render | 🟢 100% Render | 🟢 100% Render |
 | **`CarouselMessage` (Slider)** | 🟢 100% Render | 🟢 100% Render | 🟢 100% Render |
 | **`TextMessage`** | 🟢 100% Render | 🟢 100% Render | 🟢 100% Render |
+
