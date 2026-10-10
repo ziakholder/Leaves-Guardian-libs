@@ -121,16 +121,33 @@ const client = new LeavesClient({
   });
   ```
 
-### 2. Autentikasi Pairing Code
+### 2. Autentikasi Pairing Code & Custom Code (v0.3.2)
 
 Jika bot dijalankan pada server *headless* tanpa dukungan rendering grafis terminal atau Anda lebih memilih autentikasi via nomor telepon, gunakan metode pairing code:
 
-```javascript
+::: code-group
+
+```javascript [Opsi A: Custom Code (8 Karakter)]
 const client = new LeavesClient({
   auth: {
     directory: './session',
     method: 'pairing',
-    phoneNumber: '628123456789' // Kode negara + nomor telepon tanpa '+' atau spasi
+    phoneNumber: '628123456789', // Kode negara + nomor telepon
+    customCode: 'LEAVES01'       // Custom kode pairing persis 8 karakter
+  }
+});
+
+client.on('pairing_code', ({ code, phoneNumber, custom }) => {
+  console.log(`🔑 Pairing Code ${custom ? '(Custom)' : ''} untuk ${phoneNumber}: ${code}`);
+});
+```
+
+```javascript [Opsi B: Kode Acak Otomatis]
+const client = new LeavesClient({
+  auth: {
+    directory: './session',
+    method: 'pairing',
+    phoneNumber: '628123456789'
   }
 });
 
@@ -139,7 +156,10 @@ client.on('pairing_code', ({ code, phoneNumber }) => {
 });
 ```
 
+:::
+
 * **Tautkan di Ponsel**: Buka WhatsApp di ponsel Anda, masuk ke **Perangkat Tertaut** > **Tautkan Perangkat** > **Tautkan dengan nomor telepon saja**, lalu masukkan 8 digit kode yang muncul.
+* **Persyaratan Custom Code**: Kode wajib berupa string tepat 8 karakter (huruf kapital dan/atau angka). Jika tidak valid, Leaves Guardian otomatis beralih ke kode acak aman.
 
 ---
 

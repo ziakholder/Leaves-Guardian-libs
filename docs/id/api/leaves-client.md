@@ -27,7 +27,8 @@ const client = new LeavesClient({
   auth: {
     directory: './session',           // Lokasi penyimpanan kredensial autentikasi
     method: 'pairing',                // 'pairing' | 'qr'
-    phoneNumber: '628123456789'       // Wajib jika method adalah 'pairing'
+    phoneNumber: '628123456789',      // Wajib jika method adalah 'pairing'
+    customCode: 'LEAVES01'            // Opsional kode pairing custom 8 karakter (v0.3.2)
   },
 
   // Pengaturan Rekoneksi Otomatis (ReconnectManager)

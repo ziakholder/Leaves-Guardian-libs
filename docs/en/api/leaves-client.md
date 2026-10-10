@@ -27,7 +27,8 @@ const client = new LeavesClient({
   auth: {
     directory: './session',           // Path to store Baileys auth credentials
     method: 'pairing',                // 'pairing' | 'qr'
-    phoneNumber: '628123456789'       // Required when method is 'pairing'
+    phoneNumber: '628123456789',      // Required when method is 'pairing'
+    customCode: 'LEAVES01'            // Optional custom 8-char pairing code (v0.3.2)
   },
 
   // Reconnection Backoff (ReconnectManager)

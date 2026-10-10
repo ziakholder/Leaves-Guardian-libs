@@ -121,16 +121,33 @@ const client = new LeavesClient({
   });
   ```
 
-### Pairing Code Authentication
+### Pairing Code & Custom Code Authentication (v0.3.2)
 
 If your bot runs in a headless environment without terminal graphics or you prefer pairing via a phone number, use the pairing code method:
 
-```javascript
+::: code-group
+
+```javascript [Option A: Custom Code (8 Characters)]
 const client = new LeavesClient({
   auth: {
     directory: './session',
     method: 'pairing',
-    phoneNumber: '628123456789' // Country code + phone number without '+' or formatting
+    phoneNumber: '628123456789', // Country code + phone number
+    customCode: 'LEAVES01'       // Custom pairing code (exactly 8 chars)
+  }
+});
+
+client.on('pairing_code', ({ code, phoneNumber, custom }) => {
+  console.log(`🔑 Pairing Code ${custom ? '(Custom)' : ''} for ${phoneNumber}: ${code}`);
+});
+```
+
+```javascript [Option B: Automatic Random Code]
+const client = new LeavesClient({
+  auth: {
+    directory: './session',
+    method: 'pairing',
+    phoneNumber: '628123456789'
   }
 });
 
@@ -139,7 +156,10 @@ client.on('pairing_code', ({ code, phoneNumber }) => {
 });
 ```
 
+:::
+
 * **Link on Device**: Open WhatsApp on your phone, go to **Linked Devices** > **Link a Device** > **Link with phone number instead**, and enter the 8-digit code.
+* **Custom Code Rule**: The code must be exactly 8 alphanumeric characters. If omitted or invalid, Leaves Guardian falls back to standard cryptographically secure random codes.
 
 ---
 
