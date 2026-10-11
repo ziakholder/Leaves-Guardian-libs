@@ -1,8 +1,28 @@
-# Patch Notes: Native Flow Interactive Messages & Silent Drop Fix
+# Leaves Guardian Patch Notes
 
-This document details the critical technical patch addressing the **WhatsApp Multi-Device Native Flow Silent Drop** issue where interactive messages (*List Menus, Quick Reply Buttons, and Carousels*) **appeared in the bot sender outbox but were completely invisible on recipient devices**.
+Release history and technical updates for Leaves Guardian.
 
 ---
+
+## 🚀 Version 0.3.5: Tiered MessageStore & Anti Memory Leak
+
+Architectural message storage update addressing the classic in-memory heap bloat (*out-of-memory crashes*) on 24/7 long-running WhatsApp bots in active groups.
+
+### 1. Problems Resolved
+* Memory leaks caused by traditional in-memory stores hoarding hundreds of thousands of messages in RAM.
+* Process crashes (`JavaScript heap out of memory`) on long runtimes in resource-constrained VPS environments.
+* Dropped E2EE retry handshakes (`getMessage`) when evicted messages were lost from memory.
+
+### 2. Features & Improvements
+* **Tiered Storage (L1 RAM + L2 Disk):** Restricts L1 RAM cache to 50-100 active messages (~2-5 MB RAM, >95% savings), while complete history is asynchronously persisted to disk.
+* **Automated `getMessage(key)` Fallback:** Lookups check L1 RAM first; if missed, seamlessly reads from L2 Disk for Baileys E2EE retry handshakes.
+* **Binary Buffer Sanitization:** Cleans large binary media buffers prior to disk persistence, maintaining minimal storage footprints.
+* **Auto-Pruning:** Background timers automatically delete message files older than the retention threshold (default 3 days).
+* **MemoryGuard Integration:** Registers the mitigation hook `messageStore.evictMemory()` to automatically clear L1 RAM to zero under critical process memory pressure.
+
+---
+
+## 🛡️ Version 0.3.4: Native Flow & Silent Drop Fix
 
 ## 🔍 Problem Analysis: The "Silent Drop" Symptom
 

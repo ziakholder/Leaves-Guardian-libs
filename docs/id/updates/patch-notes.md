@@ -1,8 +1,28 @@
-# Catatan Update Patch: Solusi Native Flow & Silent Drop
+# Catatan Update Patch Leaves Guardian
 
-Halaman ini mendokumentasikan pembaruan teknis terkait protokol **WhatsApp Multi-Device Native Flow** di Leaves Guardian untuk menyelesaikan kendala pesan interaktif (*List Menu & Button*) yang **hanya tampak di nomor bot (pengirim) namun tidak muncul di nomor pengguna (penerima)**.
+Dokumentasi riwayat pembaruan dan rilis versi Leaves Guardian.
 
 ---
+
+## 🚀 Versi 0.3.5: Tiered MessageStore & Anti Memory Leak
+
+Pembaruan arsitektur penyimpanan pesan untuk menyelesaikan isu kebocoran memori RAM (*heap out of memory*) pada bot WhatsApp yang berjalan 24/7 di grup aktif.
+
+### 1. Masalah yang Diselesaikan
+* Kebocoran memori RAM klasik Baileys akibat penyimpanan ratusan ribu pesan di RAM tanpa batas.
+* Kerentanan crash proses Node.js (`JavaScript heap out of memory`) pada runtime panjang di VPS dengan RAM terbatas.
+* Kehilangan data retry E2EE (`getMessage`) saat pesan tergeser dari antrean memori.
+
+### 2. Fitur & Peningkatan
+* **Tiered Storage (L1 RAM + L2 Disk):** Membatasi L1 RAM hanya pada 50-100 pesan aktif (~2-5 MB RAM, penghematan >95%), sementara riwayat lengkap dipersistensikan ke disk secara asynchronous.
+* **Fallback Otomatis `getMessage(key)`:** Pencarian pesan memeriksa L1 RAM lebih dulu; jika miss, membaca dari L2 Disk secara instan untuk handshake retry Baileys.
+* **Sanitasi Buffer Biner:** Membersihkan buffer media berukuran besar sebelum disimpan ke disk agar ukuran file tetap ringkas.
+* **Auto-Pruning:** Pembersihan otomatis file pesan yang melampaui batas retensi (default 3 hari).
+* **Integrasi MemoryGuard:** Mendaftarkan hook mitigasi `messageStore.evictMemory()` untuk mengosongkan L1 RAM secara otomatis saat server mengalami lonjakan beban memori kritis.
+
+---
+
+## 🛡️ Versi 0.3.4: Solusi Native Flow & Silent Drop
 
 ## 🔍 Diagnosis Masalah: Silent Drop pada Nomor Penerima
 

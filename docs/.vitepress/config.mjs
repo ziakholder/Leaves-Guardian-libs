@@ -59,6 +59,7 @@ export default defineConfig({
       'en/utilities/prompt': 'id/guides/prompts',
       'en/utilities/autodelete': 'id/guides/autodelete',
       'en/reliability/smartstore': 'id/guides/smartstore',
+      'en/reliability/message-store': 'id/reliability/message-store',
       'en/reliability/session-recovery': 'id/reliability/session-recovery',
       'en/reliability/health-monitor': 'id/reliability/health-monitor',
       'en/reliability/watchdog': 'id/reliability/watchdog',
@@ -207,6 +208,7 @@ export default defineConfig({
               collapsed: true,
               items: [
                 { text: 'SmartStore (KV Store)', link: '/en/reliability/smartstore' },
+                { text: 'MessageStore (Anti Memory Leak)', link: '/en/reliability/message-store' },
                 { text: 'Session Recovery', link: '/en/reliability/session-recovery' },
                 { text: 'Health Monitor', link: '/en/reliability/health-monitor' },
                 { text: 'Socket Watchdog', link: '/en/reliability/watchdog' },
@@ -308,6 +310,7 @@ export default defineConfig({
               text: 'Keandalan & Trafik',
               collapsed: false,
               items: [
+                { text: 'Penyimpanan Pesan (MessageStore)', link: '/id/reliability/message-store' },
                 { text: 'Pemulihan Sesi (Session Recovery)', link: '/id/reliability/session-recovery' },
                 { text: 'Health Monitor (Observabilitas)', link: '/id/reliability/health-monitor' },
                 { text: 'Socket Watchdog (Liveness)', link: '/id/reliability/watchdog' },
