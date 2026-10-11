@@ -4,6 +4,31 @@ Release history and technical updates for Leaves Guardian.
 
 ---
 
+## 🚀 Version 0.3.6: GroupCache (Group Metadata Caching & Real-Time Sync)
+
+Reliability and performance update for WhatsApp group management to eliminate repetitive `sock.groupMetadata()` calls, IQ 429 rate limit errors, excessive network latency, and complex admin permission checks.
+
+### 1. Problems Resolved
+* **WhatsApp IQ Rate Limits (Error 429):** Rapid successive `sock.groupMetadata()` calls in high-traffic groups trigger temporary WhatsApp query blocks.
+* **Elevated Group Command Latency:** Bot response delays (300ms - 2000ms) caused by redundant network queries on every group command invocation.
+* **Cumbersome Admin Identity Resolution:** Varied JID formats (plain phone numbers, device suffixes, and LIDs) complicate admin authorization checks.
+* **Silent Cache Stale State:** Naive bot caches fail to reflect member joins, leaves, or admin role promotions until process restart.
+
+### 2. Features & Improvements
+* **GroupCache Bounded In-Memory Store:** Group metadata cache with configurable TTL (default 5 minutes) and capacity bounds (default 250 groups).
+* **Singleflight Request Coalescing:** Concurrent metadata requests for the same group coalesce into exactly one network call.
+* **Real-Time Event Synchronization:** Automatically processes socket events `groups.update` and `group-participants.update` (`add`, `remove`, `promote`, `demote`) to update in-memory rosters immediately.
+* **Client Helper Convenience Methods:**
+  * `client.groupMetadata(jid, forceRefresh)`
+  * `client.isGroupAdmin(groupJid, userJid)`
+  * `client.isBotAdmin(groupJid)`
+  * `client.getGroupAdmins(groupJid)`
+  * `client.getGroupParticipants(groupJid)`
+  * `client.getAllCachedGroupMetadata()`
+* **MemoryGuard Integration:** Registers the mitigation hook `groupCache.clear` to clear cache entries under critical memory pressure.
+
+---
+
 ## 🚀 Version 0.3.5: Tiered MessageStore & Anti Memory Leak
 
 Architectural message storage update addressing the classic in-memory heap bloat (*out-of-memory crashes*) on 24/7 long-running WhatsApp bots in active groups.

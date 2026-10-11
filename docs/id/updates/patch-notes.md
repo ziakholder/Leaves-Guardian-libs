@@ -4,6 +4,31 @@ Dokumentasi riwayat pembaruan dan rilis versi Leaves Guardian.
 
 ---
 
+## 🚀 Versi 0.3.6: GroupCache (Caching Metadata Grup & Sinkronisasi Real-Time)
+
+Pembaruan keandalan dan performa penanganan grup WhatsApp untuk meniadakan pemanggilan `sock.groupMetadata()` berulang kali yang memicu rate limit WhatsApp (IQ 429), latensi jaringan tinggi, dan kerumitan deteksi hak admin.
+
+### 1. Masalah yang Diselesaikan
+* **WhatsApp IQ Rate Limit (Error 429):** Panggilan `sock.groupMetadata()` berulang kali di grup ramai membuat socket diblokir sementara oleh WhatsApp.
+* **Latensi Perintah Grup Tinggi:** Respon bot lambat (300ms - 2000ms) akibat setiap perintah grup harus melakukan query jaringan ulang ke server WhatsApp.
+* **Kode Deteksi Admin yang Rumit:** Variasi format JID pengirim (nomor biasa, device suffix, atau LID) menyulitkan validasi hak akses admin bot.
+* **Cache Kedaluwarsa Tanpa Sadar:** Cache bot manual tidak memperbarui data saat member keluar, masuk, atau di-promote sampai bot di-restart.
+
+### 2. Fitur & Peningkatan
+* **GroupCache Bounded In-Memory Store:** Cache metadata grup dengan TTL cerdas (default 5 menit) dan batas kapasitas (default 250 grup).
+* **Singleflight Request Coalescing:** Permintaan metadata grup secara bersamaan digabungkan ke dalam 1 request jaringan tunggal.
+* **Sinkronisasi Event Real-Time:** Menangkap event socket `groups.update` dan `group-participants.update` (`add`, `remove`, `promote`, `demote`) secara otomatis untuk memutasi data peserta di memori tanpa query ulang.
+* **Helper Methods Tingkat Klien:**
+  * `client.groupMetadata(jid, forceRefresh)`
+  * `client.isGroupAdmin(groupJid, userJid)`
+  * `client.isBotAdmin(groupJid)`
+  * `client.getGroupAdmins(groupJid)`
+  * `client.getGroupParticipants(groupJid)`
+  * `client.getAllCachedGroupMetadata()`
+* **Integrasi MemoryGuard:** Mendaftarkan hook mitigasi `groupCache.clear` untuk mengosongkan cache secara otomatis saat terdeteksi tekanan memori tinggi.
+
+---
+
 ## 🚀 Versi 0.3.5: Tiered MessageStore & Anti Memory Leak
 
 Pembaruan arsitektur penyimpanan pesan untuk menyelesaikan isu kebocoran memori RAM (*heap out of memory*) pada bot WhatsApp yang berjalan 24/7 di grup aktif.

@@ -64,6 +64,7 @@ export default defineConfig({
       'en/reliability/health-monitor': 'id/reliability/health-monitor',
       'en/reliability/watchdog': 'id/reliability/watchdog',
       'en/reliability/memory-guard': 'id/reliability/memory-guard',
+      'en/reliability/group-cache': 'id/reliability/group-cache',
       'en/traffic/traffic-controller': 'id/traffic/traffic-controller',
       'en/traffic/rate-limiter': 'id/traffic/rate-limiter',
       'en/traffic/deduplicator': 'id/traffic/deduplicator',
@@ -212,7 +213,8 @@ export default defineConfig({
                 { text: 'Session Recovery', link: '/en/reliability/session-recovery' },
                 { text: 'Health Monitor', link: '/en/reliability/health-monitor' },
                 { text: 'Socket Watchdog', link: '/en/reliability/watchdog' },
-                { text: 'Memory Guard', link: '/en/reliability/memory-guard' }
+                { text: 'Memory Guard', link: '/en/reliability/memory-guard' },
+                { text: 'Group Metadata Cache', link: '/en/reliability/group-cache' }
               ]
             },
             {
@@ -315,6 +317,7 @@ export default defineConfig({
                 { text: 'Health Monitor (Observabilitas)', link: '/id/reliability/health-monitor' },
                 { text: 'Socket Watchdog (Liveness)', link: '/id/reliability/watchdog' },
                 { text: 'Memory Guard (Mitigasi Memori)', link: '/id/reliability/memory-guard' },
+                { text: 'Group Metadata Cache (GroupCache)', link: '/id/reliability/group-cache' },
                 { text: 'Traffic Controller (Antrean & Pacing)', link: '/id/traffic/traffic-controller' },
                 { text: 'Ingress Rate Limiter', link: '/id/traffic/rate-limiter' },
                 { text: 'Ingress Deduplicator', link: '/id/traffic/deduplicator' },
