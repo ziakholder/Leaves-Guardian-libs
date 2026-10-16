@@ -16,7 +16,7 @@ export default defineConfig({
 
     // OpenGraph Social Sharing (Global)
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:site_name', content: 'Leaves Guardian Documentation' }],
+    ['meta', { property: 'og:site_name', content: 'Leaves Guardian' }],
     ['meta', { property: 'og:image', content: '/og-image.png' }],
     ['meta', { property: 'og:image:type', content: 'image/png' }],
     ['meta', { property: 'og:image:width', content: '1200' }],
@@ -103,25 +103,44 @@ export default defineConfig({
       head.push(['link', { rel: 'alternate', hreflang: 'x-default', href: 'https://leavesguardian.enginelabs.my.id/' }]);
     }
 
-    // Factual JSON-LD Structured Data for Root / Landing Pages
+    // Factual JSON-LD Structured Data for Root / Landing Pages (Google Site Name + SoftwareApplication)
     if (relativePath === 'index.md' || relativePath === 'en/index.md' || relativePath === 'id/index.md') {
       const jsonLd = {
         '@context': 'https://schema.org',
-        '@type': 'SoftwareApplication',
-        'name': 'Leaves Guardian',
-        'applicationCategory': 'DeveloperApplication',
-        'operatingSystem': 'Node.js',
-        'description': 'Baileys wrapper and reliability layer for WhatsApp bots built with Node.js.',
-        'url': 'https://leavesguardian.enginelabs.my.id/',
-        'author': {
-          '@type': 'Person',
-          'name': 'Rafa Dito',
-          'worksFor': {
-            '@type': 'Organization',
-            'name': 'Royal Engine Studio'
+        '@graph': [
+          {
+            '@type': 'WebSite',
+            '@id': 'https://leavesguardian.enginelabs.my.id/#website',
+            'url': 'https://leavesguardian.enginelabs.my.id/',
+            'name': 'Leaves Guardian',
+            'alternateName': ['LeavesGuardian', 'Leaves Guardian Docs'],
+            'description': 'Documentation for Leaves Guardian, a Baileys wrapper and reliability layer for WhatsApp bots built with Node.js.',
+            'publisher': {
+              '@type': 'Organization',
+              'name': 'Royal Engine Studio',
+              'url': 'https://leavesguardian.enginelabs.my.id/'
+            }
+          },
+          {
+            '@type': 'SoftwareApplication',
+            '@id': 'https://leavesguardian.enginelabs.my.id/#software',
+            'name': 'Leaves Guardian',
+            'applicationCategory': 'DeveloperApplication',
+            'operatingSystem': 'Node.js',
+            'description': 'Baileys wrapper and reliability layer for WhatsApp bots built with Node.js.',
+            'url': 'https://leavesguardian.enginelabs.my.id/',
+            'downloadUrl': 'https://www.npmjs.com/package/leaves-guardian',
+            'author': {
+              '@type': 'Person',
+              'name': 'Rafa Dito',
+              'worksFor': {
+                '@type': 'Organization',
+                'name': 'Royal Engine Studio'
+              }
+            },
+            'license': 'https://opensource.org/licenses/MIT'
           }
-        },
-        'license': 'https://opensource.org/licenses/MIT'
+        ]
       };
       head.push(['script', { type: 'application/ld+json' }, JSON.stringify(jsonLd)]);
     }

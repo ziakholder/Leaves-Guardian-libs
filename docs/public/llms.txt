@@ -1,0 +1,92 @@
+# Leaves Guardian
+
+> Enterprise Baileys Wrapper & Infrastructure Library for WhatsApp Bots built with pure Node.js ESM.
+
+Leaves Guardian abstracts away the complexity of @whiskeysockets/baileys connection lifecycle, session management, multi-step messaging, media pipelines, rate limiting, and memory protection into a clean, modular, and enterprise-grade architecture.
+
+- **NPM Package**: https://www.npmjs.com/package/leaves-guardian
+- **Documentation**: https://leavesguardian.enginelabs.my.id/
+- **GitHub Repository**: https://github.com/ziakholder/Leaves-Guardian
+
+---
+
+## Key Modules & Capabilities
+
+### 1. High-Level Core Client (`LeavesClient`)
+- State-machine driven lifecycle (`IDLE`, `INITIALIZING`, `AUTHENTICATING`, `CONNECTING`, `OPEN`, `READY`, `RECONNECTING`, `SHUTDOWN`).
+- Deterministic readiness distinction (`OPEN` vs `READY`).
+- Zero-crash reconnection engine with exponential backoff and jitter.
+- Integrated session recovery and auth credential safeguarding.
+
+### 2. Message Builders (Rich Interactive Payloads)
+- `TextMessage`: Fluent templating with variable substitution `setVars({ name: 'User' })`.
+- `ButtonMessage`: Interactive quick-reply, URL, and CTA buttons.
+- `ListMessage`: Single-select and sectioned interactive menu lists.
+- `CarouselMessage`: Multi-card horizontal swipeable carousel with button attachments.
+- `AIRichMessage`: Meta AI rich formatting with Markdown, syntax-highlighted code blocks, tables, and citations.
+- `CanvasMessage`: WhatsApp HTML5 Mini-App and interactive game canvas rendering with Android fast-edit bypass.
+- `MediaMessage`: Unified builder for images, videos, documents, audio, and voice notes.
+- `ProductMessage`: Universal product catalog and checkout cards.
+- `PollMessage`: Native WhatsApp poll creation with single/multi-choice configurations.
+- `RichMessage`: Structured ASCII table layouts, monospace code blocks, and quote tips.
+- `EventMessage`: WhatsApp group event invitations with start/end time, call links, and locations.
+- `StickerMessage`: Dynamic image-to-WebP 512x512 converter with custom EXIF metadata pack name and author.
+
+### 3. Reliability & Infrastructure Subsystems
+- `IngressRateLimiter`: Per-JID sliding-window rate limiter with burst protection and penalty tracking.
+- `IngressDeduplicator`: In-memory LRU message deduplicator preventing duplicate event handling.
+- `TrafficController`: Outbound message queue with priority dispatching, rate pacing, and backpressure hysteresis.
+- `MediaPipeline`: Stream transformer and caching pipeline for fast media delivery.
+- `MemoryGuard`: Proactive RSS and heap memory monitoring with automatic GC triggering and store eviction hooks.
+- `Watchdog`: Connection liveness monitoring, heartbeat tracking, and zombie socket termination.
+- `SmartStore`: Resilient, atomic file-backed JSON key-value store with in-memory cache and namespace support.
+- `TerminalManager`: High-security terminal presentation engine with automatic secret redaction and privacy masking.
+
+---
+
+## Installation
+
+```bash
+npm install leaves-guardian
+```
+
+*Requirements: Node.js >= 18.0.0 (Pure ESM)*
+
+---
+
+## Quick Start Example
+
+```javascript
+import { LeavesClient, TextMessage, ButtonMessage } from 'leaves-guardian';
+
+const client = new LeavesClient({
+  auth: {
+    directory: './session',
+    method: 'qr'
+  },
+  printQR: true,
+  traffic: { enabled: true },
+  rateLimiter: { enabled: true },
+  deduplicator: { enabled: true }
+});
+
+client.on('ready', ({ user }) => {
+  console.log(`Bot connected as ${user.name} (${user.id})`);
+});
+
+client.on('message', async (message) => {
+  if (message.body === '!ping') {
+    await client.sendText(message.from, 'Pong! 🏓');
+  }
+
+  if (message.body === '!menu') {
+    await new ButtonMessage(client)
+      .setBody('Welcome to Leaves Guardian! Choose an option:')
+      .addReply('Documentation', 'cmd_docs')
+      .addUrl('GitHub', 'https://github.com/ziakholder/Leaves-Guardian')
+      .send(message.from);
+  }
+});
+
+await client.connect();
+```
