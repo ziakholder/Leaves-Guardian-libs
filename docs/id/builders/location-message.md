@@ -1,6 +1,6 @@
-# LocationMessage Builder (v0.3.8)
+# LocationMessage Builder (v0.3.9)
 
-`LocationMessage` adalah builder kartu lokasi interaktif WhatsApp modern yang diperkenalkan pada **Leaves Guardian v0.3.8**.
+`LocationMessage` adalah builder kartu lokasi interaktif WhatsApp modern yang diperkenalkan pada **Leaves Guardian v0.3.8** dan disempurnakan pada **v0.3.9**.
 
 Builder ini menghasilkan pesan bergaya kartu *Share Location* resmi WhatsApp dengan icon pin merah `📍`, nama/judul tebal, teks alamat/deskripsi, thumbnail avatar atau peta persegi di sebelah kanan kartu, serta tombol aksi interaktif (*Native Flow*) dan menu dropdown di bawahnya.
 
@@ -9,8 +9,9 @@ Builder ini menghasilkan pesan bergaya kartu *Share Location* resmi WhatsApp den
 ## Keunggulan LocationMessage
 
 1. **Tampilan Elegan & Eksklusif**: Memberikan kesan bot asisten profesional seperti akun WhatsApp Business resmi dengan layout kartu terpadu dan thumbnail avatar di sebelah kanan.
-2. **Bebas Silent Drop & Error 401**: WhatsApp memvalidasi paket stansa lokasi secara aman pada perangkat Multi-Device tanpa memicu penghapusan diam-diam (*silent drop*).
-3. **Mewarisi Kemampuan Tombol Lengkap**: Karena merupakan turunan dari `ButtonMessage`, Anda dapat menambahkan tombol Quick Reply, CTA URL, CTA Copy, CTA Call, hingga menu Dropdown pilihan sekaligus.
+2. **Kompresi Thumbnail Pintar Otomatis (v0.3.9)**: Menggunakan pipeline multi-engine (`sharp` -> `@napi-rs/canvas` -> `jimp`) untuk otomatis mengonversi gambar thumbnail apa pun (PNG besar, JPG 4K, dsb.) menjadi JPEG 300x300 cover-crop yang tajam dan ringan (~15-30 KB).
+3. **Bebas Silent Drop & Error 401**: WhatsApp memvalidasi paket stansa lokasi secara aman pada perangkat Multi-Device tanpa memicu penghapusan diam-diam (*silent drop*) akibat payload Protobuf yang terlalu besar.
+4. **Mewarisi Kemampuan Tombol Lengkap**: Karena merupakan turunan dari `ButtonMessage`, Anda dapat menambahkan tombol Quick Reply, CTA URL, CTA Copy, CTA Call, hingga menu Dropdown pilihan sekaligus.
 
 ---
 
@@ -20,7 +21,7 @@ Builder ini menghasilkan pesan bergaya kartu *Share Location* resmi WhatsApp den
 | :--- | :--- |
 | `.setName(name)` | Mengatur judul utama yang tampil tebal di samping icon pin `📍`. |
 | `.setAddress(address)` | Mengatur teks deskripsi atau alamat di bawah judul. |
-| `.setThumbnail(thumb)` | Mengatur thumbnail gambar persegi di sebelah kanan kartu (menerima URL web, Buffer, atau path file lokal). |
+| `.setThumbnail(thumb, opts)` | Mengatur thumbnail gambar persegi di sebelah kanan kartu (menerima URL web, Buffer, atau path file lokal). Otomatis dikompresi ke 300x300 JPEG. Opsi kustom `{ width, height, quality }` bersifat opsional. |
 | `.setCoordinates(lat, long)` | Mengatur koordinat latitude & longitude (opsional, default `0, 0`). |
 | `.addReply(text, id)` | Menambahkan tombol aksi quick reply. |
 | `.addUrl(text, url)` | Menambahkan tombol tautan web browser eksternal. |
@@ -96,6 +97,28 @@ client.on('message', async (msg) => {
 });
 ```
 
+## Kompresi Thumbnail Otomatis (Smart Multi-Engine)
+
+Di WhatsApp, thumbnail kartu lokasi disematkan langsung di dalam aliran data Protobuf biner (`jpegThumbnail`). Jika bot mengirim gambar asli tanpa kompresi (misalnya file PNG 3 MB atau foto kamera 4K), ukuran payload pesan akan membengkak, membebani transmisi socket Baileys, dan berisiko ditolak (*silent drop*) oleh WhatsApp di ponsel penerima.
+
+Di **Leaves Guardian v0.3.9**, `LocationMessage` dan `.setLocationHeader()` pada `ButtonMessage` / `ListMessage` dilengkapi pipeline multi-engine otomatis:
+
+1. **Sharp (Rekomendasi Utama)**: Menggunakan MozJPEG dan Lanczos3 resampling untuk kualitas visual tertajam dengan ukuran file minimal (~15-25 KB). Otomatis aktif bila Baileys atau bot Anda menginstal `sharp`.
+2. **@napi-rs/canvas (Fallback Pertama)**: Menggunakan Rust Skia engine bawaan Leaves Guardian dengan `imageSmoothingQuality = 'high'`.
+3. **Jimp (Fallback Murni JS)**: Menggunakan engine JavaScript murni untuk lingkungan tanpa binary native.
+4. **Buffer Asli (Safety Net)**: Jika seluruh engine tidak tersedia, buffer asli tetap diteruskan tanpa menghentikan bot.
+
+Secara default, gambar dipotong persegi (*center cover-crop*) berukuran 300x300 pixel dengan format JPEG 80% quality. Anda juga dapat menyesuaikan dimensinya:
+
+```javascript
+// Mengatur resolusi atau kualitas kustom
+kartuAsisten.setThumbnail('https://example.com/foto.png', {
+  width: 300,
+  height: 300,
+  quality: 85,
+});
+```
+
 ---
 
 ## Navigasi Terkait
@@ -103,3 +126,4 @@ client.on('message', async (msg) => {
 - **[ButtonMessage Builder](/id/builders/button-message)**: Builder tombol native flow standar.
 - **[ListMessage Builder](/id/builders/list-message)**: Builder menu pop-up list.
 - **[Menangkap Respon Interaktif](/id/builders/handling-responses)**: Panduan lengkap penanganan event interaktif.
+

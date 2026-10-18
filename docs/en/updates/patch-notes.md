@@ -4,6 +4,29 @@ Release history and technical updates for Leaves Guardian.
 
 ---
 
+## 🚀 Version 0.3.9: Multi-Engine Smart 300x300 Location Thumbnail Auto-Compression (Sharp / Canvas / Jimp)
+
+Payload optimization update for location cards and interactive headers to prevent silent drops, Protobuf socket bloating, and avatar thumbnail distortion across WhatsApp clients.
+
+### 1. Problems Resolved
+* **Silent Drops Caused by Oversized Protobuf Payloads:** In the WhatsApp protocol, `jpegThumbnail` for location messages is embedded directly as binary bytes within the Protobuf message structure (`bytes jpegThumbnail = 16`). Attaching uncompressed source images (such as 2-5 MB PNGs or high-res camera captures) causes socket frames to balloon and triggers silent drops by WhatsApp servers and client apps.
+* **Distorted Aspect Ratios in Location Avatars:** WhatsApp location cards render a strict 1:1 square avatar container. Wide (16:9) or tall portraits stretch or squeeze unpleasantly if not cleanly center-cropped.
+* **Single-Engine Fragility:** Relying solely on a single image processing module causes runtime failures on environments lacking native C/C++ dependencies.
+
+### 2. Features & Improvements
+* **Multi-Engine Cascading Compression Pipeline:**
+  * The `thumbnail-processor.js` engine implements resilient fallback tiers:
+    1. **Sharp (Primary Engine)**: Harnesses MozJPEG and Lanczos3 resampling for pristine image sharpness and minimum payload size (~15-25 KB).
+    2. **@napi-rs/canvas (First Fallback)**: High-performance Rust Skia canvas renderer bundled directly with Leaves Guardian.
+    3. **Jimp (Pure JS Fallback)**: Pure JavaScript fallback ensuring zero-dependency cross-platform support.
+    4. **Raw Buffer Fallback (Safety Net)**: Ensures the message payload is sent without process interruption if all image engines fail.
+* **Standardized 300x300 Square Center-Crop:**
+  * All location thumbnails across `LocationMessage`, `ButtonMessage.setLocationHeader()`, and `ListMessage.setLocationHeader()` automatically center-crop and resize to 300x300 pixels at 80% JPEG quality.
+* **Custom Dimension & Quality Overrides:**
+  * Both `.setThumbnail(thumb, { width, height, quality })` and `.setLocationHeader(name, address, thumb, { width, height, quality })` accept optional dimension and quality parameters.
+
+---
+
 ## 🚀 Version 0.3.8: LocationMessage, Location Card Headers & Dropdown Lists
 
 Interactive messaging update introducing modern interactive location card payloads, location headers with avatar thumbnails, and dropdown list menu integration within button messages.

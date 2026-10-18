@@ -4,6 +4,29 @@ Dokumentasi riwayat pembaruan dan rilis versi Leaves Guardian.
 
 ---
 
+## 🚀 Versi 0.3.9: Kompresi Otomatis 300x300 Thumbnail Lokasi Multi-Engine (Sharp / Canvas / Jimp)
+
+Pembaruan optimalisasi payload pesan lokasi dan header interaktif untuk mencegah *silent drop*, pembengkakan socket Protobuf, serta distorsi gambar avatar pada kartu lokasi WhatsApp.
+
+### 1. Masalah yang Diselesaikan
+* **Silent Drop Akibat Payload Protobuf Raksasa:** Pada protokol WhatsApp, `jpegThumbnail` untuk pesan lokasi dikirim secara langsung sebagai byte biner di dalam payload Protobuf (`bytes jpegThumbnail = 16`). Mengirim gambar asli tanpa kompresi (seperti file PNG 2-5 MB atau foto kamera resolusi tinggi) menyebabkan socket Baileys membengkak drastis dan pesan dijatuhkan diam-diam (*silent drop*) oleh WhatsApp di perangkat tujuan.
+* **Distorsi Aspek Rasio Thumbnail Avatar:** Container avatar lokasi WhatsApp memiliki rasio 1:1 (persegi). Gambar dengan rasio lain (seperti 16:9 atau potret) sering kali gepeng atau terdistorsi jika tidak dipotong secara proporsional.
+* **Ketergantungan Engine Tunggal:** Ketergantungan pada satu modul grafis tertentu sering memicu error jika runtime server tidak memiliki binary pendukung.
+
+### 2. Fitur & Peningkatan
+* **Pipeline Kompresi Otomatis Multi-Engine:**
+  * Modul `thumbnail-processor.js` mengimplementasikan fallback berjenjang:
+    1. **Sharp (Prioritas Pertama)**: Menggunakan MozJPEG dan Lanczos3 resampling untuk hasil kompresi tertajam dan ukuran file paling efisien (~15-25 KB).
+    2. **@napi-rs/canvas (Fallback Pertama)**: Menggunakan canvas berbasis Rust Skia yang sudah terinstal langsung dengan Leaves Guardian.
+    3. **Jimp (Fallback Murni JS)**: Fallback JavaScript murni tanpa ketergantungan library native.
+    4. **Raw Buffer Fallback (Safety Net)**: Menjamin pesan tetap terkirim meskipun seluruh engine gambar gagal memproses.
+* **Standarisasi Cover-Crop Persegi 300x300:**
+  * Semua thumbnail kartu lokasi pada `LocationMessage`, `ButtonMessage.setLocationHeader()`, dan `ListMessage.setLocationHeader()` secara otomatis dipotong proporsional dari titik tengah (*center cover-crop*) ke resolusi standar 300x300 pixel dengan format JPEG 80% quality.
+* **Kustomisasi Opsi Dimensi & Kualitas:**
+  * Method `.setThumbnail(thumb, { width, height, quality })` dan `.setLocationHeader(name, address, thumb, { width, height, quality })` kini menerima opsi konfigurasi kustom.
+
+---
+
 ## 🚀 Versi 0.3.8: LocationMessage, Header Kartu Lokasi & Dropdown List
 
 Pembaruan interaktivitas pesan WhatsApp yang menghadirkan model pesan kartu lokasi interaktif modern, header lokasi dengan avatar thumbnail, serta integrasi tombol dropdown list menu langsung di dalam kartu tombol.
