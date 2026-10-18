@@ -38,6 +38,7 @@ await client.sendMessage(msg.chat.id, list);
 | `.setImage(pathOrBuffer)` | Sets an image media banner for the list header. |
 | `.setVideo(pathOrBuffer)` | Sets a video media banner for the list header. |
 | `.setDocument(pathOrBuffer, opts)` | Sets a document attachment for the list header. |
+| `.setLocationHeader(name, address, thumb)` | Sets a location card header with pin 📍 and avatar thumbnail. |
 | `.setTitle(title)` | Sets the header title. |
 | `.setBody(body)` | Sets the message body. |
 | `.setFooter(footer)` | Sets the footer text. |

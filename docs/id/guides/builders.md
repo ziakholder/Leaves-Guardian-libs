@@ -1,6 +1,10 @@
-# Panduan 12 Message Builders
+# Panduan Message Builders
 
-Leaves Guardian menyediakan **12 Message Builders** terpadu (Layer 5) untuk mempermudah pembuatan pesan WhatsApp yang kaya, interaktif, dan terstruktur dengan sintaks yang rapi (*fluent chainable API*).
+::: tip DOKUMENTASI LENGKAP TERSEDIA
+Dokumentasi Message Builders kini memiliki kategori khusus mandiri dengan penjelasan mendalam, tabel method, dan contoh kode copy-pasteable untuk setiap builder di **[Kategori Khusus Message Builders](/id/builders/overview)**.
+:::
+
+Leaves Guardian menyediakan rangkaian **Message Builders** terpadu (Layer 5) untuk mempermudah pembuatan pesan WhatsApp yang kaya, interaktif, dan terstruktur dengan sintaks yang rapi (*fluent chainable API*).
 
 Seluruh builder mewarisi method dasar dari `BaseBuilder`, sehingga secara otomatis mendukung fitur *string templating* `{{var}}`, external ad reply, forwarding saluran (channel), mention pengguna, dan kutipan pesan (*quote*).
 

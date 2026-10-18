@@ -54,8 +54,22 @@ export default defineConfig({
       'en/getting-started/quickstart': 'id/quickstart/quickstart',
       'en/getting-started/architecture': 'id/quickstart/architecture',
       'en/messaging/schema': 'id/guides/schema',
-      'en/builders/overview': 'id/guides/builders',
-      'en/builders/handling-responses': 'id/guides/handling-responses',
+      'en/builders/overview': 'id/builders/overview',
+      'en/builders/text-message': 'id/builders/text-message',
+      'en/builders/button-message': 'id/builders/button-message',
+      'en/builders/location-message': 'id/builders/location-message',
+      'en/builders/list-message': 'id/builders/list-message',
+      'en/builders/carousel-message': 'id/builders/carousel-message',
+      'en/builders/media-message': 'id/builders/media-message',
+      'en/builders/sticker-message': 'id/builders/sticker-message',
+      'en/builders/product-message': 'id/builders/product-message',
+      'en/builders/poll-message': 'id/builders/poll-message',
+      'en/builders/ai-rich-message': 'id/builders/ai-rich-message',
+      'en/builders/canvas-message': 'id/builders/canvas-message',
+      'en/builders/event-message': 'id/builders/event-message',
+      'en/builders/rich-message': 'id/builders/rich-message',
+      'en/builders/a2ui-message': 'id/builders/a2ui-message',
+      'en/builders/handling-responses': 'id/builders/handling-responses',
       'en/utilities/prompt': 'id/guides/prompts',
       'en/utilities/autodelete': 'id/guides/autodelete',
       'en/reliability/smartstore': 'id/guides/smartstore',
@@ -155,11 +169,11 @@ export default defineConfig({
       link: '/en/',
       description: 'Documentation for Leaves Guardian, a Baileys wrapper and reliability layer for WhatsApp bots built with Node.js.',
       head: [
-        ['meta', { property: 'og:title', content: 'Leaves Guardian — Baileys Wrapper & Reliability Layer' }],
+        ['meta', { property: 'og:title', content: 'Leaves Guardian - Baileys Wrapper & Reliability Layer' }],
         ['meta', { property: 'og:description', content: 'Documentation for Leaves Guardian, a Baileys wrapper and reliability layer for WhatsApp bots built with Node.js.' }],
         ['meta', { property: 'og:locale', content: 'en_US' }],
         ['meta', { property: 'og:locale:alternate', content: 'id_ID' }],
-        ['meta', { name: 'twitter:title', content: 'Leaves Guardian — Baileys Wrapper & Reliability Layer' }],
+        ['meta', { name: 'twitter:title', content: 'Leaves Guardian - Baileys Wrapper & Reliability Layer' }],
         ['meta', { name: 'twitter:description', content: 'Documentation for Leaves Guardian, a Baileys wrapper and reliability layer for WhatsApp bots built with Node.js.' }]
       ],
       themeConfig: {
@@ -199,6 +213,7 @@ export default defineConfig({
                 { text: 'Builders Overview & BaseBuilder', link: '/en/builders/overview' },
                 { text: 'TextMessage', link: '/en/builders/text-message' },
                 { text: 'ButtonMessage', link: '/en/builders/button-message' },
+                { text: 'LocationMessage (v0.3.8)', link: '/en/builders/location-message' },
                 { text: 'ListMessage', link: '/en/builders/list-message' },
                 { text: 'CarouselMessage', link: '/en/builders/carousel-message' },
                 { text: 'MediaMessage', link: '/en/builders/media-message' },
@@ -209,6 +224,7 @@ export default defineConfig({
                 { text: 'CanvasMessage', link: '/en/builders/canvas-message' },
                 { text: 'EventMessage', link: '/en/builders/event-message' },
                 { text: 'RichMessage', link: '/en/builders/rich-message' },
+                { text: 'A2UIMessage', link: '/en/builders/a2ui-message' },
                 { text: 'Interactive Click Responses', link: '/en/builders/handling-responses' }
               ]
             },
@@ -289,17 +305,17 @@ export default defineConfig({
       link: '/id/',
       description: 'Dokumentasi Leaves Guardian, wrapper Baileys dan lapisan keandalan untuk bot WhatsApp di Node.js.',
       head: [
-        ['meta', { property: 'og:title', content: 'Leaves Guardian — Wrapper Baileys & Lapisan Keandalan WhatsApp' }],
+        ['meta', { property: 'og:title', content: 'Leaves Guardian - Wrapper Baileys & Lapisan Keandalan WhatsApp' }],
         ['meta', { property: 'og:description', content: 'Dokumentasi Leaves Guardian, wrapper Baileys dan lapisan keandalan untuk bot WhatsApp di Node.js.' }],
         ['meta', { property: 'og:locale', content: 'id_ID' }],
         ['meta', { property: 'og:locale:alternate', content: 'en_US' }],
-        ['meta', { name: 'twitter:title', content: 'Leaves Guardian — Wrapper Baileys & Lapisan Keandalan WhatsApp' }],
+        ['meta', { name: 'twitter:title', content: 'Leaves Guardian - Wrapper Baileys & Lapisan Keandalan WhatsApp' }],
         ['meta', { name: 'twitter:description', content: 'Dokumentasi Leaves Guardian, wrapper Baileys dan lapisan keandalan untuk bot WhatsApp di Node.js.' }]
       ],
       themeConfig: {
         nav: [
           { text: 'Panduan Cepat', link: '/id/quickstart/overview' },
-          { text: 'Message Builders', link: '/id/guides/builders' },
+          { text: 'Message Builders', link: '/id/builders/overview' },
           { text: 'Recipes', link: '/id/recipes/production' },
           { text: 'Referensi API', link: '/id/api/leaves-client' },
           { text: 'Update Patch', link: '/id/updates/patch-notes' }
@@ -316,12 +332,32 @@ export default defineConfig({
               ]
             },
             {
+              text: 'Message Builders',
+              collapsed: false,
+              items: [
+                { text: 'Ringkasan & BaseBuilder', link: '/id/builders/overview' },
+                { text: 'TextMessage', link: '/id/builders/text-message' },
+                { text: 'ButtonMessage', link: '/id/builders/button-message' },
+                { text: 'LocationMessage (v0.3.8)', link: '/id/builders/location-message' },
+                { text: 'ListMessage', link: '/id/builders/list-message' },
+                { text: 'CarouselMessage', link: '/id/builders/carousel-message' },
+                { text: 'MediaMessage', link: '/id/builders/media-message' },
+                { text: 'StickerMessage', link: '/id/builders/sticker-message' },
+                { text: 'ProductMessage', link: '/id/builders/product-message' },
+                { text: 'PollMessage', link: '/id/builders/poll-message' },
+                { text: 'AIRichMessage', link: '/id/builders/ai-rich-message' },
+                { text: 'CanvasMessage', link: '/id/builders/canvas-message' },
+                { text: 'EventMessage', link: '/id/builders/event-message' },
+                { text: 'RichMessage', link: '/id/builders/rich-message' },
+                { text: 'A2UIMessage', link: '/id/builders/a2ui-message' },
+                { text: 'Menangkap Respon Interaktif', link: '/id/builders/handling-responses' }
+              ]
+            },
+            {
               text: 'Panduan Praktis',
               collapsed: false,
               items: [
                 { text: 'Skema Pesan Ternormalisasi', link: '/id/guides/schema' },
-                { text: 'Panduan 12 Message Builders', link: '/id/guides/builders' },
-                { text: 'Menangkap Respon Tombol & Menu', link: '/id/guides/handling-responses' },
                 { text: 'Interaksi & Tanya Jawab (Prompt)', link: '/id/guides/prompts' },
                 { text: 'Auto-Delete & Pesan Sementara', link: '/id/guides/autodelete' },
                 { text: 'Penyimpanan Data Ringan (SmartStore)', link: '/id/guides/smartstore' }

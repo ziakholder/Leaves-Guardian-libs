@@ -13,6 +13,7 @@ It supports multiple button types, including quick replies, URL click-throughs, 
 | **Quick Reply** | `.addReply(text, id)` | Standard action button. Triggers a `BUTTON` event with `id` when clicked. |
 | **CTA URL** | `.addUrl(text, url)` | Opens an external web link in the browser. |
 | **CTA Copy** | `.addCopy(text, code)` | One-click copy of a text string, payment account, or promo code to clipboard. |
+| **Dropdown List** | `.addDropdown(title, sections)` | Embeds a multi-section selection popup list menu directly inside the button card. |
 | **Galaxy Flow** | `.addGalaxy(flowCtaText, opts)` | Navigation banner / aesthetic native flow button. |
 | **Limited Offer**| `.addLimitedOffer(text, opts)` | Promotional badge banner with expiration countdown timer. |
 
@@ -53,6 +54,46 @@ await client.sendMessage(msg.chat.id, buttonMsg);
 
 ---
 
+## Combining Buttons with Dropdown Lists (`addDropdown`)
+
+You can combine direct action buttons and selection popup lists within the same interactive message:
+
+```javascript
+const fullMenu = new ButtonMessage(client)
+  .setTitle('Service Catalog')
+  .setBody('Choose an option or browse categories:')
+  .addReply('⚡ Quick Start', 'quick_start')
+  .addDropdown('📂 Browse Categories', [
+    {
+      title: 'WhatsApp Solutions',
+      rows: [
+        { id: 'srv_bot_basic', title: 'Standard Bot', description: 'Auto-reply & notification service' },
+        { id: 'srv_bot_pro', title: 'Enterprise Agent', description: 'Multi-agent orchestration' }
+      ]
+    }
+  ])
+  .addUrl('🌐 Visit Documentation', 'https://leavesguardian.enginelabs.my.id');
+
+await client.sendMessage(msg.chat.id, fullMenu);
+```
+
+---
+
+## Interactive Location Card Headers (v0.3.8)
+
+You can attach a location card header with a red pin `📍` and avatar thumbnail:
+
+```javascript
+const locationButton = new ButtonMessage(client)
+  .setLocationHeader('Hello Rafa~ 👋', 'Choose an option below:', 'https://example.com/avatar.jpg')
+  .addReply('📋 Main Menu', '.menu')
+  .addReply('📞 Contact CS', 'cs_help');
+
+await client.sendMessage(msg.chat.id, locationButton);
+```
+
+---
+
 ## Capturing Button Click Responses
 
 When a user clicks a quick reply button, your bot receives a normalized message with `msg.type === 'BUTTON'`:
@@ -73,5 +114,6 @@ For complete details on response handling, see **[Handling Interactive Responses
 ## Related Documentation
 
 - **[Handling Interactive Responses](/en/builders/handling-responses)**: Parsing button clicks.
+- **[LocationMessage Builder](/en/builders/location-message)**: Dedicated location card builder.
 - **[ListMessage Builder](/en/builders/list-message)**: Multi-section menu lists.
 - **[CarouselMessage Builder](/en/builders/carousel-message)**: Multi-card carousel cards.

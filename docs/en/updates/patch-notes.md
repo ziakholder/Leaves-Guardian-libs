@@ -4,6 +4,42 @@ Release history and technical updates for Leaves Guardian.
 
 ---
 
+## 🚀 Version 0.3.8: LocationMessage, Location Card Headers & Dropdown Lists
+
+Interactive messaging update introducing modern interactive location card payloads, location headers with avatar thumbnails, and dropdown list menu integration within button messages.
+
+### 1. Problems Resolved
+* **Need for Sleek Welcome Cards:** Bots need clean, modern, official-looking welcome cards and menu interfaces without awkward external ad-reply banner cropping.
+* **Silent Drop & 401 Unlink Mitigation:** Sending raw interactive buttons across various mobile clients can face strict multi-device filtering; native location stanzas pass WhatsApp multi-device validation reliably.
+* **Separation of Buttons and Lists:** Developers previously had to choose between sending quick reply buttons or popup lists separately.
+
+### 2. Features & Improvements
+* **Dedicated `LocationMessage` Class:**
+  * Constructs native WhatsApp location cards with red pin `📍`, prominent bold title, address text, and right-aligned high-resolution avatar thumbnail.
+  * Supports `.setName()`, `.setAddress()`, `.setThumbnail()`, and `.setCoordinates()`.
+  * Subclasses `ButtonMessage`: Inherits Quick Replies, CTA URLs, CTA Copy, CTA Call, Galaxy banners, and Limited offers.
+* **Dropdown List Menus inside Buttons (`addDropdown` / `addList`):**
+  * Enables combining direct action buttons and multi-section dropdown selection menus in a single `ButtonMessage` or `LocationMessage`.
+* **Location Card Headers across Interactive Messages (`setLocationHeader` / `setLocation`):**
+  * Added to `ButtonMessage` and `ListMessage` to attach location card headers with avatar thumbnails effortlessly.
+
+---
+
+## 🛡️ Version 0.3.7: Auto-Purge 401 Disconnect & Zero-Downtime Session Recovery
+
+Connection and auth reliability update to automatically handle WhatsApp 401 unlinked disconnections without crash loops or manual server intervention.
+
+### 1. Problems Resolved
+* **Unlink Crash-Loops (Error 401 / Logged Out):** When a user unlinks a bot device from WhatsApp mobile settings, traditional bots enter endless reconnect loops using invalid tokens, causing process crashes.
+* **Stale Credential Files:** Corrupted auth state files in the session folder prevent generating clean new QR codes.
+
+### 2. Features & Improvements
+* **Automated 401 Disconnect Detection:** `ConnectionManager` and `SessionRecovery` detect disconnect codes `401 Unauthorized` and `DisconnectReason.loggedOut`.
+* **Safe Session Directory Auto-Purge:** Automatically purges invalid authentication files without locking the Node.js process.
+* **Clean In-Memory Re-Authentication:** Resets internal auth credentials and immediately generates a fresh QR code or pairing code without manual process restarts.
+
+---
+
 ## 🚀 Version 0.3.6: GroupCache (Group Metadata Caching & Real-Time Sync)
 
 Reliability and performance update for WhatsApp group management to eliminate repetitive `sock.groupMetadata()` calls, IQ 429 rate limit errors, excessive network latency, and complex admin permission checks.

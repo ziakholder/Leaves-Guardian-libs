@@ -6,12 +6,13 @@ All builders inherit from `BaseBuilder`, providing a shared set of capabilities 
 
 ---
 
-## The 12 Builders at a Glance
+## Available Builders at a Glance
 
 | Builder Class | Target Payload Type | Key Capabilities |
 | :--- | :--- | :--- |
 | **`TextMessage`** | `extendedTextMessage` | Formatted text, link preview toggles, mentions, and quotes. |
-| **`ButtonMessage`** | `interactiveMessage` | Native flow buttons (Quick Reply, CTA URL, CTA Copy, CTA Call). |
+| **`ButtonMessage`** | `interactiveMessage` | Native flow buttons (Quick Reply, CTA URL, CTA Copy, CTA Call, Dropdowns). |
+| **`LocationMessage`** | `interactiveMessage` | Interactive location card with pin 📍, bold title, avatar thumbnail, and buttons. |
 | **`ListMessage`** | `interactiveMessage` | Multi-section selection menu lists with titles and descriptions. |
 | **`CarouselMessage`** | `interactiveMessage` | Multi-card horizontal carousel structures with per-card buttons and images. |
 | **`MediaMessage`** | Unified Media | Single builder for Image, Video, Audio/PTT, Document, and Sticker. |
@@ -22,12 +23,13 @@ All builders inherit from `BaseBuilder`, providing a shared set of capabilities 
 | **`CanvasMessage`** | `interactiveMessage` | HTML-based canvas payload generator with domain whitelisting. |
 | **`EventMessage`** | `eventMessage` | WhatsApp native group calendar event invitations. |
 | **`RichMessage`** | `interactiveMessage` | Visual flex cards with headers, footers, badges, and action buttons. |
+| **`A2UIMessage`** | `interactiveMessage` | Agent-to-User Interface generative UI widget based on Meta Bloks / StarCore. |
 
 ---
 
 ## Shared Methods (`BaseBuilder`)
 
-Because every builder extends `BaseBuilder`, the following chainable methods are universally available on all 12 builders:
+Because every builder extends `BaseBuilder`, the following chainable methods are universally available on all builders:
 
 ### 1. Header, Body, and Footer
 ```javascript

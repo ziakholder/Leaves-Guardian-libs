@@ -4,6 +4,42 @@ Dokumentasi riwayat pembaruan dan rilis versi Leaves Guardian.
 
 ---
 
+## 🚀 Versi 0.3.8: LocationMessage, Header Kartu Lokasi & Dropdown List
+
+Pembaruan interaktivitas pesan WhatsApp yang menghadirkan model pesan kartu lokasi interaktif modern, header lokasi dengan avatar thumbnail, serta integrasi tombol dropdown list menu langsung di dalam kartu tombol.
+
+### 1. Masalah yang Diselesaikan
+* **Kebutuhan Format Kartu Sambutan Elegan:** Bot memerlukan tampilan menu dan profil sambutan yang bersih, modern, dan tampak resmi seperti akun korporat tanpa terpotong banner ad-reply.
+* **Risiko Silent Drop & 401 Unlink:** Pengiriman interactive buttons biasa pada beberapa jenis device terkadang terhambat validasi multi-device; format lokasi native lolos validasi WhatsApp secara aman.
+* **Keterbatasan Tombol Tunggal:** Sebelumnya pengguna harus memilih antara mengirim tombol *quick reply* saja atau menu *list* saja secara terpisah.
+
+### 2. Fitur & Peningkatan
+* **Class `LocationMessage` Terdedikasi:**
+  * Menghasilkan kartu lokasi WhatsApp asli dengan icon pin merah `📍`, nama/judul tebal, teks alamat, dan thumbnail avatar persegi resolusi tinggi di sebelah kanan.
+  * Mendukung method: `.setName()`, `.setAddress()`, `.setThumbnail()`, dan `.setCoordinates()`.
+  * Mewarisi seluruh kemampuan `ButtonMessage`: Quick Reply, CTA URL, CTA Copy, CTA Call, Galaxy banner, dan Limited offer.
+* **Dropdown List Menus di Dalam Tombol (`addDropdown` / `addList`):**
+  * Memungkinkan penggabungan tombol aksi langsung dan menu pilihan dropdown bertingkat sekaligus dalam satu pesan `ButtonMessage` atau `LocationMessage`.
+* **Header Kartu Lokasi di Seluruh Pesan Interaktif (`setLocationHeader` / `setLocation`):**
+  * Ditambahkan ke `ButtonMessage` dan `ListMessage` untuk menyematkan header lokasi dengan thumbnail avatar secara instan.
+
+---
+
+## 🛡️ Versi 0.3.7: Auto-Purge 401 Disconnect & Pemulihan Sesi Zero-Downtime
+
+Pembaruan keandalan koneksi dan sesi auth untuk menangani disconnect 401 (*unlinked / logged out*) secara otomatis tanpa *crash-loop* dan tanpa intervensi manual.
+
+### 1. Masalah yang Diselesaikan
+* **Crash-Loop Sesi Putus (Error 401 / Logged Out):** Saat pengguna memutuskan tautan perangkat (*unlink device*) dari WhatsApp di ponsel, bot tradisional terus mencoba reconnect berulang-ulang menggunakan kredensial yang sudah tidak valid, menyebabkan crash loop tanpa henti.
+* **File Kredensial Sampah:** Kredensial kedaluwarsa di folder sesi menumpuk dan mencegah pembuatan QR code baru secara bersih.
+
+### 2. Fitur & Peningkatan
+* **Deteksi Otomatis Disconnect 401:** `ConnectionManager` dan `SessionRecovery` secara otomatis mengenali kode pemutusan `401 Unauthorized` atau `DisconnectReason.loggedOut`.
+* **Auto-Purge Direktori Sesi Kedaluwarsa:** Menghapus file auth lama yang rusak secara aman tanpa mengunci proses Node.js.
+* **Transisi QR / Pairing Code Segar Tanpa Restart:** Bot secara otomatis mereset state internal auth dan langsung menampilkan QR code atau kode pairing baru tanpa perlu me-restart proses server secara manual.
+
+---
+
 ## 🚀 Versi 0.3.6: GroupCache (Caching Metadata Grup & Sinkronisasi Real-Time)
 
 Pembaruan keandalan dan performa penanganan grup WhatsApp untuk meniadakan pemanggilan `sock.groupMetadata()` berulang kali yang memicu rate limit WhatsApp (IQ 429), latensi jaringan tinggi, dan kerumitan deteksi hak admin.
