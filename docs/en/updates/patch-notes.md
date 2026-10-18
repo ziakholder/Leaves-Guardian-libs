@@ -4,6 +4,25 @@ Release history and technical updates for Leaves Guardian.
 
 ---
 
+## 🚀 Version 0.3.12: Location Thumbnail Sharpness Boost (420x420 & High-Contrast Sharpening)
+
+Visual fidelity update for location card thumbnails and interactive headers, increasing pixel density by 96% (from 300x300 up to 420x420) with full MozJPEG luminance bit allocation and Sharp micro-contrast sharpening while strictly staying under the 30 KB safety cap.
+
+### 1. Problems Resolved
+* **Slight Softness on High-DPI Screens:** In v0.3.11, default dimensions were capped at 300x300 with dampened sharpening and 4:4:4 chroma subsampling which took bits away from the luma (Y) channel. On modern high-density AMOLED screens, fine anime lineart and textures appeared slightly soft.
+
+### 2. Features & Improvements
+* **Resolution Raised to 420x420 Standard:**
+  * Expands pixel canvas from 90,000 to 176,400 pixels (almost double the visual information).
+* **Luma-Priority Chroma Subsampling (4:2:0):**
+  * Allocates maximum bit budget to the luminance channel (where human visual perception of sharp outlines and edges resides).
+* **Full Sharp Micro-Contrast Sharpening Kernel:**
+  * Employs the full unsharp mask filter from libvips/Sharp, making fine eyes, hair strands, and edges dramatically crisper.
+* **8-Step Adaptive Byte-Budget Loop:**
+  * Dynamically guarantees the payload stays strictly under 30,000 bytes (~27-28 KB) to prevent WhatsApp mobile client-side drops.
+
+---
+
 ## 🚀 Version 0.3.11: Adaptive Byte-Budget Thumbnail (<= 30 KB) & Fix Missing Image on WhatsApp Mobile
 
 Critical stability and visual reliability update addressing missing/blank location card thumbnails on WhatsApp Android and iOS mobile clients due to WhatsApp's internal 32 KiB client limit, while preserving Retina HD sharpness through an adaptive byte-budget pipeline.

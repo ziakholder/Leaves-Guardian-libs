@@ -4,6 +4,25 @@ Dokumentasi riwayat pembaruan dan rilis versi Leaves Guardian.
 
 ---
 
+## 🚀 Versi 0.3.12: Peningkatan Ketajaman Thumbnail Lokasi (420x420 & High-Contrast Sharpening)
+
+Pembaruan kejernihan dan resolusi visual untuk thumbnail kartu lokasi dan header interaktif, menaikkan kerapatan piksel sebesar 96% (dari 300x300 ke 420x420) dengan alokasi luminans MozJPEG penuh dan penajaman kontras mikro Sharp tanpa melampaui batas aman 30 KB.
+
+### 1. Masalah yang Diselesaikan
+* **Tampilan Masih Terasa Agak Buram (Soft) pada Layar High-DPI:** Pada v0.3.11, resolusi dibatasi ke 300x300 dengan penajaman yang diperlemah serta alokasi kroma 4:4:4 yang menyita bitrate luminans (Y). Akibatnya, pada layar smartphone AMOLED berdensitas tinggi, garis outline dan detail halus terlihat sedikit pudar atau kurang tajam.
+
+### 2. Fitur & Peningkatan
+* **Resolusi Ditingkatkan ke Standar 420x420:**
+  * Meningkatkan luas piksel dari 90.000 menjadi 176.400 piksel (peningkatan kerapatan detail hampir dua kali lipat).
+* **Luma-Priority Chroma Subsampling (4:2:0):**
+  * Mengalokasikan bitrate maksimal pada kanal luminans (ketajaman garis mata, rambut, dan siluet kontras) sehingga gambar tampil tajam dan bebas buram.
+* **Sharp Smart Sharpening Kernel:**
+  * Menggunakan filter penajaman kontras penuh dari libvips/Sharp yang mengembalikan mikro-kontras pada garis anime dan foto beresolusi tinggi.
+* **Adaptive 8-Step Byte-Budget Engine:**
+  * Engine cerdas menguji ukuran byte secara iteratif untuk menjamin payload tetap di bawah 30.000 bytes (~27-28 KB) sehingga 100% aman dan tidak pernah di-drop oleh klien WhatsApp mobile.
+
+---
+
 ## 🚀 Versi 0.3.11: Adaptive Byte-Budget Thumbnail (<= 30 KB) & Fix Gambar Blank di WhatsApp Mobile
 
 Pembaruan kritis untuk mengatasi hilangnya gambar thumbnail kartu lokasi pada aplikasi WhatsApp Android dan iOS akibat ambang batas biner internal klien WhatsApp (32 KiB cap), serta memastikan ketajaman Retina HD dengan ukuran file adaptif yang selalu aman.
