@@ -1,6 +1,6 @@
-# LocationMessage Builder (v0.3.11)
+# LocationMessage Builder (v0.3.13)
 
-`LocationMessage` is a modern interactive WhatsApp location card builder introduced in **Leaves Guardian v0.3.8** and perfected with **Adaptive Byte-Budget Retina HD in v0.3.11**.
+`LocationMessage` is a modern interactive WhatsApp location card builder introduced in **Leaves Guardian v0.3.8** and perfected with **Strict 300x300 Dimensions & Safe Byte-Budget in v0.3.13**.
 
 It generates an authentic *Share Location* card featuring a red pin emoji `📍`, prominent bold title, address/description text, high-resolution square avatar or map thumbnail on the right, and interactive action buttons (*Native Flow*) along with dropdown menus underneath.
 
@@ -9,7 +9,7 @@ It generates an authentic *Share Location* card featuring a red pin emoji `📍`
 ## Key Advantages
 
 1. **Elegant & Premium Appearance**: Gives bots an official enterprise look with a unified location card layout and right-aligned avatar thumbnail.
-2. **Adaptive Retina HD Compression (v0.3.11)**: WhatsApp client mobile apps enforce a strict internal limit of 32 KiB (32,768 bytes) on inline Protobuf thumbnails. The multi-engine pipeline (`sharp` -> `@napi-rs/canvas` -> `jimp`) in v0.3.11 automatically resizes thumbnails to 300x300 with Lanczos3 resampling, unsharp masking (`.sharpen()`), `chromaSubsampling: '4:4:4'`, and an adaptive MozJPEG loop guaranteeing byte size stays <= 30,000 bytes (~24-27 KB average). Produces razor-sharp anime lineart and photo details with zero risk of the image disappearing on WhatsApp Android or iOS.
+2. **Safe & Crisp Thumbnail Compression (v0.3.13)**: WhatsApp mobile clients (Android & iOS) enforce dual constraints on inline thumbnails: a strict maximum resolution of **300x300 pixels** and a byte budget ceiling of **32 KiB (32,768 bytes)**. Exceeding either boundary causes WhatsApp to silently drop the image. In v0.3.13, the multi-engine pipeline (`sharp` -> `@napi-rs/canvas` -> `jimp`) strictly locks dimensions to 300x300 with Sharp micro-contrast sharpening (`.sharpen()`), 4:2:0 luma priority, and MozJPEG 85% quality (~21 KB). Graphics remain sharp, contrasted, and 100% reliably visible on all mobile clients.
 3. **Resistant to Silent Drops & 401 Disconnections**: WhatsApp safely validates native location stanzas across Multi-Device clients without triggering silent drops caused by bloated Protobuf payloads.
 4. **Inherits Full ButtonMessage Capabilities**: Subclasses `ButtonMessage`, allowing Quick Reply buttons, CTA URL links, CTA Copy shortcuts, CTA Call buttons, and Dropdown selection menus all within the same card.
 
@@ -97,13 +97,17 @@ client.on('message', async (msg) => {
 });
 ```
 
-## Adaptive Retina HD Thumbnail Compression (Smart Multi-Engine)
+## Safe & Crisp Thumbnail Compression (Smart Multi-Engine)
 
-In WhatsApp, location card thumbnails are directly serialized into the raw binary Protobuf payload (`jpegThumbnail`). WhatsApp mobile clients (Android and iOS) enforce an internal hard ceiling of **32 KiB (32,768 bytes)**. Whenever an inline `jpegThumbnail` exceeds 32 KB, the mobile WhatsApp client silently drops the thumbnail stream, resulting in a blank icon without an image.
+In WhatsApp, location card thumbnails are directly serialized into the raw binary Protobuf payload (`jpegThumbnail`). WhatsApp mobile clients enforce two strict boundaries:
+1. **Byte Size Boundary:** Maximum **32 KiB (32,768 bytes)**.
+2. **Dimension Boundary:** Maximum **300x300 pixels**.
 
-In **Leaves Guardian v0.3.11**, `LocationMessage` and `.setLocationHeader()` on `ButtonMessage` / `ListMessage` feature an automatic multi-engine processing pipeline upgraded to **Adaptive Retina HD** with an enforced byte budget (<= 30,000 bytes):
+If a thumbnail exceeds 300x300 pixels or exceeds 32 KB in size, WhatsApp mobile clients (Android and iOS) will automatically discard the thumbnail stream, resulting in a blank icon without an image.
 
-1. **Sharp (Primary Engine)**: Harnesses MozJPEG, Lanczos3 resampling, unsharp masking (`.sharpen({ sigma: 1.0, m1: 0.5, m2: 0.5 })`), and `chromaSubsampling: '4:4:4'` for razor-sharp clarity on Retina/AMOLED displays. An adaptive step-down loop automatically tests output bytes and decreases quality if output exceeds 30 KB, ensuring safe delivery (~24-27 KB average). Automatically utilized whenever `sharp` is present in your project.
+In **Leaves Guardian v0.3.13**, `LocationMessage` and `.setLocationHeader()` on `ButtonMessage` / `ListMessage` feature an automatic multi-engine pipeline locking dimensions to the safe 300x300 standard with maximal visual sharpness:
+
+1. **Sharp (Primary Engine)**: Harnesses MozJPEG, Lanczos3 resampling, full unsharp masking (`.sharpen()`), and 4:2:0 luma priority at 85% quality (~21 KB) ensuring crisp lineart and high-contrast edges on AMOLED screens without breaching WhatsApp client limits. Automatically utilized whenever `sharp` is present in your project.
 2. **@napi-rs/canvas (First Fallback)**: Built-in Rust Skia canvas renderer bundled directly with Leaves Guardian, configured with `imageSmoothingQuality = 'high'` and clamped to 300x300 at 80% quality.
 3. **Jimp (Pure JS Fallback)**: Pure JavaScript image processor for environments lacking native binary toolchains.
 4. **Raw Buffer Fallback (Safety Net)**: If all engines are unavailable, the raw buffer is preserved to ensure uninterrupted message delivery.

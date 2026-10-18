@@ -1,6 +1,6 @@
-# LocationMessage Builder (v0.3.11)
+# LocationMessage Builder (v0.3.13)
 
-`LocationMessage` adalah builder kartu lokasi interaktif WhatsApp modern yang diperkenalkan pada **Leaves Guardian v0.3.8** dan disempurnakan dengan **Adaptive Byte-Budget Retina HD pada v0.3.11**.
+`LocationMessage` adalah builder kartu lokasi interaktif WhatsApp modern yang diperkenalkan pada **Leaves Guardian v0.3.8** dan disempurnakan dengan **Batas Dimensi 300x300 & Byte-Budget Aman pada v0.3.13**.
 
 Builder ini menghasilkan pesan bergaya kartu *Share Location* resmi WhatsApp dengan icon pin merah `📍`, nama/judul tebal, teks alamat/deskripsi, thumbnail avatar atau peta persegi di sebelah kanan kartu, serta tombol aksi interaktif (*Native Flow*) dan menu dropdown di bawahnya.
 
@@ -9,7 +9,7 @@ Builder ini menghasilkan pesan bergaya kartu *Share Location* resmi WhatsApp den
 ## Keunggulan LocationMessage
 
 1. **Tampilan Elegan & Eksklusif**: Memberikan kesan bot asisten profesional seperti akun WhatsApp Business resmi dengan layout kartu terpadu dan thumbnail avatar di sebelah kanan.
-2. **Kompresi Thumbnail Adaptive Retina HD (v0.3.11)**: WhatsApp memiliki batasan internal client ponsel sebesar 32 KiB (32.768 bytes) untuk inline thumbnail Protobuf. Pipeline multi-engine (`sharp` -> `@napi-rs/canvas` -> `jimp`) di v0.3.11 secara otomatis mengompresi gambar ke resolusi 300x300 dengan algoritma Lanczos3, penajaman *unsharp mask* (`.sharpen()`), `chromaSubsampling: '4:4:4'`, dan kompresi MozJPEG adaptif yang menjamin ukuran file selalu berada di bawah ambang batas aman (<= 30.000 bytes, rata-rata ~24-27 KB). Gambar tampil super tajam dan jernih tanpa risiko gambar hilang atau blank di aplikasi WhatsApp Android maupun iOS.
+2. **Kompresi Thumbnail Aman & Tajam (v0.3.13)**: WhatsApp menerapkan validasi ganda untuk inline thumbnail: batas dimensi visual maksimal **300x300 piksel** dan batas ukuran file maksimal **32 KiB (32.768 bytes)**. Melebihi salah satu dari kedua batas ini akan membuat WhatsApp mobile membuang (*drop*) gambar secara diam-diam. Di v0.3.13, pipeline multi-engine (`sharp` -> `@napi-rs/canvas` -> `jimp`) secara presisi mengunci resolusi di 300x300 dengan penajaman mikro-kontras Sharp (`.sharpen()`), alokasi luminans 4:2:0, dan MozJPEG kualitas 85% (~21 KB). Hasilnya tampil tajam, kontras, dan 100% aman muncul di WhatsApp Android maupun iOS.
 3. **Bebas Silent Drop & Error 401**: WhatsApp memvalidasi paket stansa lokasi secara aman pada perangkat Multi-Device tanpa memicu penghapusan diam-diam (*silent drop*) akibat payload Protobuf yang terlalu besar.
 4. **Mewarisi Kemampuan Tombol Lengkap**: Karena merupakan turunan dari `ButtonMessage`, Anda dapat menambahkan tombol Quick Reply, CTA URL, CTA Copy, CTA Call, hingga menu Dropdown pilihan sekaligus.
 
@@ -97,13 +97,17 @@ client.on('message', async (msg) => {
 });
 ```
 
-## Kompresi Thumbnail Adaptive Retina HD (Smart Multi-Engine)
+## Kompresi Thumbnail Aman & Tajam (Smart Multi-Engine)
 
-Di WhatsApp, thumbnail kartu lokasi disematkan langsung di dalam aliran data Protobuf biner (`jpegThumbnail`). WhatsApp client di perangkat mobile memiliki batasan internal tegas sebesar **32 KiB (32.768 bytes)**. Apabila ukuran `jpegThumbnail` melebihi 32 KB, aplikasi WhatsApp di ponsel Android maupun iOS akan membuang (*drop*) gambar tersebut sehingga kartu lokasi tampil tanpa gambar thumbnail (blank).
+Di WhatsApp, thumbnail kartu lokasi disematkan langsung di dalam aliran data Protobuf biner (`jpegThumbnail`). Klien WhatsApp pada smartphone memiliki dua batasan penting:
+1. **Batas Ukuran:** Maksimal **32 KiB (32.768 bytes)**.
+2. **Batas Resolusi:** Maksimal **300x300 piksel**.
 
-Di **Leaves Guardian v0.3.11**, `LocationMessage` dan `.setLocationHeader()` pada `ButtonMessage` / `ListMessage` dilengkapi pipeline multi-engine adaptif berstandar **Retina HD** dengan jaminan ukuran aman (<= 30.000 bytes):
+Jika gambar thumbnail melebihi 300x300 piksel atau ukuran filenya di atas 32 KB, aplikasi WhatsApp di ponsel Android maupun iOS akan membuang (*drop*) gambar tersebut secara otomatis sehingga kartu lokasi tampil polos tanpa avatar/thumbnail.
 
-1. **Sharp (Rekomendasi Utama)**: Menggunakan MozJPEG, Lanczos3 resampling, unsharp mask (`.sharpen({ sigma: 1.0, m1: 0.5, m2: 0.5 })`), serta `chromaSubsampling: '4:4:4'` untuk kejernihan dan ketajaman visual tingkat tinggi di layar HP AMOLED/Retina. Dilengkapi loop adaptif yang otomatis menguji ukuran output dan menurunkan kualitas secara bertahap jika melebihi 30 KB, sehingga output selalu berada di kisaran ~24-27 KB yang aman dan stabil. Otomatis aktif bila Baileys atau bot Anda menginstal `sharp`.
+Di **Leaves Guardian v0.3.13**, `LocationMessage` dan `.setLocationHeader()` pada `ButtonMessage` / `ListMessage` dilengkapi pipeline multi-engine yang mengunci standar aman 300x300 dengan penajaman visual maksimal:
+
+1. **Sharp (Rekomendasi Utama)**: Menggunakan MozJPEG, Lanczos3 resampling, penajaman mikro-kontras penuh (`.sharpen()`), serta alokasi luminans 4:2:0 pada kualitas 85% (~21 KB) yang menjamin detail garis dan mata tampak tajam di layar AMOLED tanpa melanggar batas resolusi WhatsApp. Otomatis aktif bila bot menginstal `sharp`.
 2. **@napi-rs/canvas (Fallback Pertama)**: Menggunakan Rust Skia engine bawaan Leaves Guardian dengan `imageSmoothingQuality = 'high'` dan resolusi aman 300x300 quality 80%.
 3. **Jimp (Fallback Murni JS)**: Menggunakan engine JavaScript murni untuk lingkungan tanpa binary native.
 4. **Buffer Asli (Safety Net)**: Jika seluruh engine tidak tersedia, buffer asli tetap diteruskan tanpa menghentikan bot.
