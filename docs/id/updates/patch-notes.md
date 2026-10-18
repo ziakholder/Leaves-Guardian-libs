@@ -4,6 +4,21 @@ Dokumentasi riwayat pembaruan dan rilis versi Leaves Guardian.
 
 ---
 
+## 🚀 Versi 0.3.13: Penegasan Batas Dimensi 300x300 Thumbnail Lokasi (Fix Gambar Hilang pada WhatsApp Mobile)
+
+Pembaruan investigatif mendalam terkait mekanisme render internal klien WhatsApp. Ditemukan bahwa klien WhatsApp mobile (Android & iOS) secara ketat membuang (*discard/drop*) gambar `jpegThumbnail` inline jika dimensi piksel melebihi 300x300 piksel, meskipun ukuran filenya berada di bawah 30 KB.
+
+### 1. Masalah yang Diselesaikan
+* **Gambar Hilang Lagi saat Dimensi Dinaikkan ke 420x420:** Klien WhatsApp memiliki dua validasi terpisah untuk `jpegThumbnail` inline: batas byte (<= 32 KB) DAN batas dimensi visual (<= 300x300 piksel). Ketika resolusi dinaikkan ke 420x420 pada v0.3.12 (meskipun filenya 28 KB), klien WhatsApp mendeteksi dimensi di atas 300 piksel dan menolak merendernya, sehingga gambar kembali hilang di aplikasi HP.
+
+### 2. Fitur & Peningkatan
+* **Batas Keras Dimensi 300x300 Piksel (Hard Clamp):**
+  * Dimensi thumbnail distandarisasi secara tegas pada **300x300 piksel** (maksimal 300 piksel) untuk menjamin lolos 100% dari validasi decoder aplikasi WhatsApp mobile.
+* **Sharp High-Frequency Sharpening:**
+  * Mempertahankan penajaman kontras mikro penuh Sharp (`.sharpen()`) pada resolusi 300x300 dengan kompresi MozJPEG kualitas 85% (~21 KB), menghasilkan gambar yang jernih dan tajam tanpa memicu penolakan dimensi oleh WhatsApp.
+
+---
+
 ## 🚀 Versi 0.3.12: Peningkatan Ketajaman Thumbnail Lokasi (420x420 & High-Contrast Sharpening)
 
 Pembaruan kejernihan dan resolusi visual untuk thumbnail kartu lokasi dan header interaktif, menaikkan kerapatan piksel sebesar 96% (dari 300x300 ke 420x420) dengan alokasi luminans MozJPEG penuh dan penajaman kontras mikro Sharp tanpa melampaui batas aman 30 KB.

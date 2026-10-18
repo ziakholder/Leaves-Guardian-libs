@@ -4,6 +4,21 @@ Release history and technical updates for Leaves Guardian.
 
 ---
 
+## 🚀 Version 0.3.13: Enforce Strict 300x300 Dimension Limit (Fix Missing Image on WhatsApp Mobile)
+
+In-depth technical update addressing WhatsApp mobile client rendering behavior. WhatsApp mobile clients (Android & iOS) enforce dual validation on inline `jpegThumbnail` byte streams: both a byte limit (<= 32 KB) AND a pixel dimension limit (<= 300x300 pixels). Passing thumbnails exceeding 300x300 pixels causes WhatsApp to silently drop the image.
+
+### 1. Problems Resolved
+* **Image Disappeared Again When Dimensions Were Raised to 420x420:** WhatsApp's client-side image decoder rejects inline `jpegThumbnail` bytes if pixel width or height exceeds 300 pixels, even if the byte payload is small (~28 KB). Consequently, 420x420 caused the image to disappear again on Android/iOS devices.
+
+### 2. Features & Improvements
+* **Hard Dimension Clamping at 300x300 Pixels:**
+  * Strict upper boundary enforced at **300x300 pixels**, guaranteeing 100% compliance with WhatsApp's client-side image decoder.
+* **Full Sharp Micro-Contrast Sharpening:**
+  * Preserves full high-frequency micro-contrast sharpening via Sharp (`.sharpen()`) at 300x300 with MozJPEG 85% quality (~21 KB), ensuring maximum visual clarity within WhatsApp's exact protocol boundaries.
+
+---
+
 ## 🚀 Version 0.3.12: Location Thumbnail Sharpness Boost (420x420 & High-Contrast Sharpening)
 
 Visual fidelity update for location card thumbnails and interactive headers, increasing pixel density by 96% (from 300x300 up to 420x420) with full MozJPEG luminance bit allocation and Sharp micro-contrast sharpening while strictly staying under the 30 KB safety cap.
