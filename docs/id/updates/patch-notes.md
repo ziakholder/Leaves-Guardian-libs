@@ -4,6 +4,26 @@ Dokumentasi riwayat pembaruan dan rilis versi Leaves Guardian.
 
 ---
 
+## 🚀 Versi 0.3.11: Adaptive Byte-Budget Thumbnail (<= 30 KB) & Fix Gambar Blank di WhatsApp Mobile
+
+Pembaruan kritis untuk mengatasi hilangnya gambar thumbnail kartu lokasi pada aplikasi WhatsApp Android dan iOS akibat ambang batas biner internal klien WhatsApp (32 KiB cap), serta memastikan ketajaman Retina HD dengan ukuran file adaptif yang selalu aman.
+
+### 1. Masalah yang Diselesaikan
+* **Gambar Thumbnail Hilang / Blank di Aplikasi WhatsApp:** WhatsApp mobile (Android & iOS) memberlakukan batas internal ketat sebesar 32 KiB (32.768 bytes) untuk stream data biner `jpegThumbnail`. Jika gambar thumbnail melebihi batas tersebut (seperti 500x500 pada v0.3.10 yang mencapai ~68 KB), klien WhatsApp langsung membuang gambar secara diam-diam sehingga kartu lokasi tampil polos tanpa avatar/gambar.
+* **Perbedaan Penanganan Antara Klien Mobile dan Web:** WhatsApp Web/Desktop dan Android/iOS membaca thumbnail dari properti header Protobuf yang sedikit berbeda (`interactiveMessage.header.jpegThumbnail` vs `header.locationMessage.jpegThumbnail`).
+
+### 2. Fitur & Peningkatan
+* **Loop Kompresi Adaptif Byte-Budget (<= 30.000 Bytes):**
+  * Memasang limit keamanan absolut `MAX_THUMB_BYTES = 30000` (di bawah limit 32.768 bytes WhatsApp).
+  * Algoritma `thumbnail-processor.js` secara otomatis menguji hasil render Sharp (MozJPEG + Lanczos3 + Sharpen + Chroma 4:4:4). Jika output melebihi 30 KB, sistem secara dinamis menurunkan kualitas atau ukuran secara bertahap sampai ukuran berada di bawah 30 KB (~24-27 KB rata-rata).
+* **Retina HD Sharpness Berstandar 300x300:**
+  * Resolusi default diatur ke 300x300 (atau maksimal 320x320) dengan kualitas 85%, unsharp mask (`.sharpen({ sigma: 1.0, m1: 0.5, m2: 0.5 })`), dan `chromaSubsampling: '4:4:4'`.
+  * Garis anime, detail rambut, dan teks tetap tajam dan beresolusi tinggi di layar AMOLED tanpa pernah melampaui batas byte WhatsApp.
+* **Dual-Channel Insertion untuk Multi-Platform:**
+  * Menyematkan `jpegThumbnail` secara ganda baik pada `header` utama maupun di dalam `header.locationMessage`, memastikan thumbnail tampil sempurna di Android, iOS, WhatsApp Web, dan Desktop.
+
+---
+
 ## 🚀 Versi 0.3.10: Upgrade Thumbnail Retina HD (500x500, Sharpening & Chroma 4:4:4)
 
 Pembaruan kejernihan grafis pada thumbnail lokasi dan header kartu interaktif untuk menghadirkan ketajaman visual tingkat tinggi (*Retina HD*) di layar smartphone modern tanpa membebani transmisi Protobuf socket.

@@ -4,6 +4,26 @@ Release history and technical updates for Leaves Guardian.
 
 ---
 
+## 🚀 Version 0.3.11: Adaptive Byte-Budget Thumbnail (<= 30 KB) & Fix Missing Image on WhatsApp Mobile
+
+Critical stability and visual reliability update addressing missing/blank location card thumbnails on WhatsApp Android and iOS mobile clients due to WhatsApp's internal 32 KiB client limit, while preserving Retina HD sharpness through an adaptive byte-budget pipeline.
+
+### 1. Problems Resolved
+* **Location Thumbnail Dropped on WhatsApp Mobile:** WhatsApp mobile clients (Android & iOS) enforce an internal hard ceiling of 32 KiB (32,768 bytes) on inline binary `jpegThumbnail` byte streams. When thumbnails exceed this cap (such as 500x500 in v0.3.10 reaching ~68 KB), the client-side renderer silently discards the thumbnail, causing the card to display without an image.
+* **Header Placement Inconsistency:** Mobile and web clients historically look for thumbnail bytes in different locations inside the Protobuf header (`interactiveMessage.header.jpegThumbnail` vs `header.locationMessage.jpegThumbnail`).
+
+### 2. Features & Improvements
+* **Adaptive Byte-Budget Loop (<= 30,000 Bytes):**
+  * Establishes a strict safety limit `MAX_THUMB_BYTES = 30000` (well below WhatsApp's 32,768-byte client threshold).
+  * `thumbnail-processor.js` evaluates Sharp render output (MozJPEG + Lanczos3 + Sharpen + Chroma 4:4:4). If the payload exceeds 30 KB, the engine dynamically steps down quality or downsamples until the output comfortably fits within budget (~24-27 KB average).
+* **Retina HD Sharpness at 300x300 Standard:**
+  * Default resolution set to 300x300 (capped at 320x320) with 85% quality, unsharp mask (`.sharpen({ sigma: 1.0, m1: 0.5, m2: 0.5 })`), and `chromaSubsampling: '4:4:4'`.
+  * Anime linework, subtle highlights, and high-frequency details remain crisp and clear on AMOLED screens without exceeding byte quotas.
+* **Cross-Platform Dual-Channel Insertion:**
+  * Attaches `jpegThumbnail` to both the root `interactiveMessage.header` and inner `locationMessage`, guaranteeing 100% visibility across Android, iOS, WhatsApp Web, and Desktop.
+
+---
+
 ## 🚀 Version 0.3.10: Retina HD Thumbnail Upgrade (500x500, Sharpening & Chroma 4:4:4)
 
 Graphic clarity update for location thumbnails and interactive card headers delivering high-density *Retina HD* visuals on modern smartphone displays without overloading Protobuf socket payloads.
