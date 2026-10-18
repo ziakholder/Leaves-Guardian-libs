@@ -4,6 +4,26 @@ Dokumentasi riwayat pembaruan dan rilis versi Leaves Guardian.
 
 ---
 
+## 🚀 Versi 0.3.10: Upgrade Thumbnail Retina HD (500x500, Sharpening & Chroma 4:4:4)
+
+Pembaruan kejernihan grafis pada thumbnail lokasi dan header kartu interaktif untuk menghadirkan ketajaman visual tingkat tinggi (*Retina HD*) di layar smartphone modern tanpa membebani transmisi Protobuf socket.
+
+### 1. Masalah yang Diselesaikan
+* **Tampilan Thumbnail Kurang Tajam di Layar Ponsel Modern:** Ukuran default 300x300 pixel di layar smartphone modern (densitas 3x/4x dengan resolusi 1080p - 1440p) terasa agak lembut (*soft*) atau pecah jika dilihat dari dekat pada panel AMOLED.
+* **Penurunan Kejernihan Warna (Chroma Bleed):** Subsampling warna bawaan 4:2:0 mengurangi resolusi kanal warna hingga separuh, membuat detail halus seperti rambut atau outline karakter anime tampak memudar.
+
+### 2. Fitur & Peningkatan
+* **Standar Resolusi 500x500 Retina HD:**
+  * Meningkatkan resolusi default dari 300x300 ke 500x500 pixel (peningkatan kerapatan pixel sebesar 2,7 kali lipat) dengan ukuran payload tetap efisien dan aman (~50-68 KB).
+* **Filter Unsharp Masking (`.sharpen()`):**
+  * Menambahkan filter penajaman kontras mikro pada engine Sharp untuk memastikan tekstur dan detail terkecil tetap menonjol.
+* **Full Chroma Subsampling 4:4:4:**
+  * Mempertahankan saturasi dan ketajaman warna penuh tanpa kompresi warna pada kanal kroma.
+* **Tingkat Kualitas Default Dinaikkan ke 88%:**
+  * Mengeliminasi artifak blok JPEG pada seluruh kartu `LocationMessage`, `ButtonMessage`, dan `ListMessage`.
+
+---
+
 ## 🚀 Versi 0.3.9: Kompresi Otomatis 300x300 Thumbnail Lokasi Multi-Engine (Sharp / Canvas / Jimp)
 
 Pembaruan optimalisasi payload pesan lokasi dan header interaktif untuk mencegah *silent drop*, pembengkakan socket Protobuf, serta distorsi gambar avatar pada kartu lokasi WhatsApp.

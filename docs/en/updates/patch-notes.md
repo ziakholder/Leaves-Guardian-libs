@@ -4,6 +4,26 @@ Release history and technical updates for Leaves Guardian.
 
 ---
 
+## 🚀 Version 0.3.10: Retina HD Thumbnail Upgrade (500x500, Sharpening & Chroma 4:4:4)
+
+Graphic clarity update for location thumbnails and interactive card headers delivering high-density *Retina HD* visuals on modern smartphone displays without overloading Protobuf socket payloads.
+
+### 1. Problems Resolved
+* **Soft / Blurry Thumbnails on Modern Phones:** The previous 300x300 pixel default appeared soft or slightly pixelated on high-DPI displays (3x/4x density on 1080p - 1440p AMOLED panels).
+* **Chroma Bleed on Fine Artwork:** Standard 4:2:0 subsampling cuts color resolution by half, causing thin lines and anime hair highlights to lose vibrance and sharpness.
+
+### 2. Features & Improvements
+* **500x500 Retina HD Resolution Standard:**
+  * Upgrades default thumbnail dimensions from 300x300 to 500x500 pixels (a 2.7x increase in pixel density) while keeping payload sizes lean and safe (~50-68 KB).
+* **Unsharp Masking (`.sharpen()`):**
+  * Introduces high-frequency micro-contrast sharpening via Sharp to make fine outlines, text, and hair textures pop.
+* **Full Chroma Subsampling 4:4:4:**
+  * Preserves full color channel resolution without subsampling degradation.
+* **Default Compression Quality Raised to 88%:**
+  * Eliminates block artifacts across all `LocationMessage`, `ButtonMessage`, and `ListMessage` location headers.
+
+---
+
 ## 🚀 Version 0.3.9: Multi-Engine Smart 300x300 Location Thumbnail Auto-Compression (Sharp / Canvas / Jimp)
 
 Payload optimization update for location cards and interactive headers to prevent silent drops, Protobuf socket bloating, and avatar thumbnail distortion across WhatsApp clients.
