@@ -4,6 +4,33 @@ Dokumentasi riwayat pembaruan dan rilis versi Leaves Guardian.
 
 ---
 
+## 🚀 Versi 0.4.0: Ekstensi Besar & Penyerapan Penuh Fitur Luna / Lyoraa
+
+Pembaruan besar (*major feature absorption*) yang menyerap seluruh kemampuan unggulan dari wrapper Luna dan Lyoraa ke dalam fondasi arsitektur enterprise Leaves Guardian, memperluas variasi interaksi pesan dan keandalan tanpa membebani runtime.
+
+### 1. Fitur Baru yang Diserap
+* **WhatsApp Native Album (`AlbumMessage` & `client.sendAlbum`):**
+  * Mengirim kumpulan gambar dan video yang otomatis dikelompokkan menjadi satu album grid di WhatsApp (membutuhkan minimal 2 item media).
+* **WhatsApp Catalog Invoice (`OrderMessage` & `client.sendOrder`):**
+  * Mengirim kartu struk atau faktur belanja katalog e-commerce resmi WhatsApp lengkap dengan penghitungan mata uang mikro (`totalAmount1000`).
+* **WhatsApp Sticker Pack (`StickerPackMessage` & `client.sendStickerPack`):**
+  * Mendistribusikan paket bundel stiker resmi WhatsApp lengkap dengan file ikon tray WebP dan pemetaan emoji keyboard.
+* **Legacy Button V2 (`ButtonMessageV2`):**
+  * Menghidupkan kembali tombol format lawas (`buttonsMessage`) dengan trik `headerType: 6` (Location Header) agar tombol tetap muncul dan berfungsi pada klien WhatsApp lama atau modifikasi.
+* **Advanced Link Preview (`withLinkPreview` & `TextMessage.setLinkPreview`):**
+  * Membangun kartu pratinjau tautan web tingkat lanjut dengan judul, deskripsi, thumbnail jernih (standard atau banner `largerThumbnail: true`), dan upload favicon resmi WhatsApp melalui MMS metadata (`thumbnail-link`).
+* **Modular Carousel Conversion (`ButtonMessage.toCard()` & `CarouselMessage.addCard`):**
+  * Memungkinkan instance `ButtonMessage` diubah menjadi kartu carousel geser secara otomatis dan mendukung pengoperan array kumpulan tombol sekaligus.
+* **Meta AI Interactive HTML (`AIRichMessage.addHtml()`):**
+  * Merender widget / mini-app HTML interaktif resmi Meta AI (`FOAHtmlPrimitiveDemoDONOTUSE`) dengan dukungan daftar origin domain terpercaya (`trustedSources`).
+* **Ekstensi Adapter & Utilitas:**
+  * SQLite Auth State adapter (`useSQLiteAuthState`) untuk penyimpanan sesi single-file anti-korupsi.
+  * Resolusi dua arah LID ke Nomor Telepon (`getPNFromLid`, `getLidFromPN`).
+  * Konversi audio ke format Opus Voice Note (`audioToOpus`).
+  * Fluent proxy builder dinamis (`client.messageBuilder(jid)`).
+
+---
+
 ## 🚀 Versi 0.3.13: Penegasan Batas Dimensi 300x300 Thumbnail Lokasi (Fix Gambar Hilang pada WhatsApp Mobile)
 
 Pembaruan investigatif mendalam terkait mekanisme render internal klien WhatsApp. Ditemukan bahwa klien WhatsApp mobile (Android & iOS) secara ketat membuang (*discard/drop*) gambar `jpegThumbnail` inline jika dimensi piksel melebihi 300x300 piksel, meskipun ukuran filenya berada di bawah 30 KB.

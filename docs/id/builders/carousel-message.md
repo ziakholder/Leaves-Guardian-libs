@@ -39,6 +39,36 @@ await client.sendMessage(msg.chat.id, carousel);
 
 ---
 
+## Konversi ButtonMessage ke Kartu Carousel (`toCard()` v0.4.0)
+
+Mulai versi **0.4.0**, Anda dapat mengubah instance `ButtonMessage` biasa menjadi kartu carousel secara instan tanpa mendefinisikan ulang properti kartu. `CarouselMessage.addCard()` juga mendukung pengoperan array kumpulan kartu sekaligus:
+
+```javascript
+import { ButtonMessage, CarouselMessage } from 'leaves-guardian';
+
+// Buat kartu menggunakan ButtonMessage
+const paket1 = new ButtonMessage(client)
+  .setTitle('📦 Paket Hemat')
+  .setBody('Kapasitas 1 GB, Bandwidth Tanpa Batas')
+  .setFooter('Rp25.000 / bln')
+  .addReply('Pesan Paket 1', 'order_pkg_1');
+
+const paket2 = new ButtonMessage(client)
+  .setTitle('🚀 Paket Pro')
+  .setBody('Kapasitas 5 GB, Prioritas Server Utama')
+  .setFooter('Rp50.000 / bln')
+  .addReply('Pesan Paket 2', 'order_pkg_2');
+
+// Langsung masukkan ke Carousel dalam bentuk array
+const carousel = new CarouselMessage(client)
+  .setBody('Silakan pilih paket server bot WhatsApp kamu:')
+  .addCard([paket1, paket2]);
+
+await carousel.send(msg.chat.id);
+```
+
+---
+
 ## Daftar Method `CarouselCard`
 
 Saat Anda memanggil `carousel.newCard()`, instance class pembantu `CarouselCard` dibuat dengan method berikut:

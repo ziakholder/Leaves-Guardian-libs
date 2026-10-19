@@ -4,6 +4,33 @@ Release history and technical updates for Leaves Guardian.
 
 ---
 
+## 🚀 Version 0.4.0: Major Extension Suite & Full Luna / Lyoraa Absorption
+
+A major release absorbing the best capabilities from Luna and Lyoraa wrappers into Leaves Guardian's enterprise-grade foundation, dramatically increasing interaction versatility and resilience without runtime bloat.
+
+### 1. New Features & Capabilities
+* **WhatsApp Native Album (`AlbumMessage` & `client.sendAlbum`):**
+  * Dispatches collections of images and videos automatically grouped into an official WhatsApp grid album card (minimum 2 media items).
+* **WhatsApp Catalog Invoice (`OrderMessage` & `client.sendOrder`):**
+  * Relays official WhatsApp catalog invoice and order summary cards complete with micro-unit currency calculation (`totalAmount1000`).
+* **WhatsApp Sticker Pack (`StickerPackMessage` & `client.sendStickerPack`):**
+  * Distributes official WhatsApp sticker pack bundles complete with custom WebP tray cover icons and emoji keyboard associations.
+* **Legacy Button V2 (`ButtonMessageV2`):**
+  * Revives legacy button format (`buttonsMessage`) using a `headerType: 6` (Location Header) protocol trick to guarantee quick reply button rendering on older and modified WhatsApp clients.
+* **Advanced Link Preview (`withLinkPreview` & `TextMessage.setLinkPreview`):**
+  * Constructs rich web preview cards with custom titles, descriptions, sharp thumbnails (standard or banner `largerThumbnail: true`), and official favicon uploads via MMS metadata (`thumbnail-link`).
+* **Modular Carousel Conversion (`ButtonMessage.toCard()` & `CarouselMessage.addCard`):**
+  * Converts any `ButtonMessage` instance into a carousel card on the fly, with native support for passing arrays of card instances directly into `CarouselMessage.addCard([btn1, btn2])`.
+* **Meta AI Interactive HTML (`AIRichMessage.addHtml()`):**
+  * Renders interactive mini-app HTML widgets via WhatsApp Meta AI's official primitive (`FOAHtmlPrimitiveDemoDONOTUSE`) with trusted origin domain validation (`trustedSources`).
+* **Adapters & Utility Extensions:**
+  * SQLite Auth State adapter (`useSQLiteAuthState`) for corruption-resistant single-file session storage.
+  * Bidirectional LID to Phone Number resolution (`getPNFromLid`, `getLidFromPN`).
+  * High-fidelity audio to Opus Voice Note converter (`audioToOpus`).
+  * Universal fluent proxy builder (`client.messageBuilder(jid)`).
+
+---
+
 ## 🚀 Version 0.3.13: Enforce Strict 300x300 Dimension Limit (Fix Missing Image on WhatsApp Mobile)
 
 In-depth technical update addressing WhatsApp mobile client rendering behavior. WhatsApp mobile clients (Android & iOS) enforce dual validation on inline `jpegThumbnail` byte streams: both a byte limit (<= 32 KB) AND a pixel dimension limit (<= 300x300 pixels). Passing thumbnails exceeding 300x300 pixels causes WhatsApp to silently drop the image.

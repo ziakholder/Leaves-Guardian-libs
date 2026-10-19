@@ -45,7 +45,30 @@ await client.sendMessage(msg.chat.id, aiMsg);
 | `.addCode(codeString, language)` | Memformat blok kode pemrograman dengan anotasi bahasa. |
 | `.addSearchSources(sourcesArray)` | Menyematkan kartu sitasi referensi dengan judul dan tautan URL. |
 | `.addBadge(label, color)` | Menambahkan lencana/badge status visual (misal status verifikasi). |
-| `.addHtml(htmlString, options)` | Menyematkan cuplikan markup HTML jika diperlukan. |
+| `.addHtml(htmlString, options)` | Menyematkan payload HTML interaktif (`FOAHtmlPrimitiveDemoDONOTUSE`) dengan opsi domain terpercaya `{ trustedSources: [] }`. |
+
+---
+
+## Contoh Widget HTML Interaktif Meta AI (`.addHtml()` v0.4.0)
+
+Fitur ini memanfaatkan primitif resmi Meta AI WhatsApp (`FOAHtmlPrimitiveDemoDONOTUSE`) untuk merender widget interaktif mini-app dengan daftar domain terpercaya:
+
+```javascript
+import { AIRichMessage } from 'leaves-guardian';
+
+const aiMsg = new AIRichMessage(client)
+  .setTitle('Statistik Performa Server')
+  .addHtml(`
+    <div style="font-family: sans-serif; padding: 12px; background: #f0fdf4; border-radius: 8px;">
+      <h3 style="color: #166534; margin: 0;">Server Status: OK</h3>
+      <p style="color: #15803d; margin: 4px 0;">Uptime: 99.98% | Latency: 18ms</p>
+    </div>
+  `.trim(), {
+    trustedSources: ['leavesguardian.enginelabs.my.id', 'nixel.dev']
+  });
+
+await aiMsg.send(msg.chat.id);
+```
 
 ---
 

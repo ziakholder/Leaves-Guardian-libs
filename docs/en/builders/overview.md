@@ -10,16 +10,20 @@ All builders inherit from `BaseBuilder`, providing a shared set of capabilities 
 
 | Builder Class | Target Payload Type | Key Capabilities |
 | :--- | :--- | :--- |
-| **`TextMessage`** | `extendedTextMessage` | Formatted text, link preview toggles, mentions, and quotes. |
-| **`ButtonMessage`** | `interactiveMessage` | Native flow buttons (Quick Reply, CTA URL, CTA Copy, CTA Call, Dropdowns). |
+| **`TextMessage`** | `extendedTextMessage` | Formatted text, link preview toggles, advanced link preview (v0.4.0), mentions, and quotes. |
+| **`ButtonMessage`** | `interactiveMessage` | Native flow buttons (Quick Reply, CTA URL, CTA Copy, CTA Call, Dropdowns) and carousel conversion `.toCard()`. |
+| **`ButtonMessageV2`** | `buttonsMessage` | Legacy buttons message using `headerType: 6` (Location Header) ensuring quick reply visibility on older clients. |
 | **`LocationMessage`** | `interactiveMessage` | Interactive location card with pin 📍, bold title, avatar thumbnail, and buttons. |
 | **`ListMessage`** | `interactiveMessage` | Multi-section selection menu lists with titles and descriptions. |
-| **`CarouselMessage`** | `interactiveMessage` | Multi-card horizontal carousel structures with per-card buttons and images. |
+| **`CarouselMessage`** | `interactiveMessage` | Multi-card horizontal carousel structures with per-card buttons and images, supporting array insertion. |
+| **`AlbumMessage`** | `albumMessage` | Native WhatsApp photo and video collection automatically grouped into a unified grid album card. |
+| **`OrderMessage`** | `orderMessage` | Official WhatsApp catalog invoice and order summary message with micro-unit currency calculation. |
+| **`StickerPackMessage`** | `stickerPackMessage` | Official WhatsApp sticker pack bundle distribution complete with tray cover and emoji associations. |
 | **`MediaMessage`** | Unified Media | Single builder for Image, Video, Audio/PTT, Document, and Sticker. |
 | **`StickerMessage`** | `stickerMessage` | WebP sticker conversion with custom EXIF pack and author metadata. |
 | **`ProductMessage`** | `productMessage` | Product catalog cards with currency-formatted pricing and retailer IDs. |
 | **`PollMessage`** | `pollCreationMessage` | Single-select or multi-select polling and voting messages. |
-| **`AIRichMessage`** | `interactiveMessage` | Structured response cards with markdown, code snippets, and source badges. |
+| **`AIRichMessage`** | `interactiveMessage` | Structured response cards with markdown, code snippets, source badges, and interactive HTML widgets. |
 | **`CanvasMessage`** | `interactiveMessage` | HTML-based canvas payload generator with domain whitelisting. |
 | **`EventMessage`** | `eventMessage` | WhatsApp native group calendar event invitations. |
 | **`RichMessage`** | `interactiveMessage` | Visual flex cards with headers, footers, badges, and action buttons. |

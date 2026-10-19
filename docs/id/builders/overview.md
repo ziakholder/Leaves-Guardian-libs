@@ -10,16 +10,20 @@ Semua builder mewarisi fungsionalitas dasar dari `BaseBuilder`. Hal ini memberik
 
 | Class Builder | Tipe Payload WhatsApp | Kemampuan Utama |
 | :--- | :--- | :--- |
-| **`TextMessage`** | `extendedTextMessage` | Teks terformat, markdown, toggle link preview, mention, dan quote. |
-| **`ButtonMessage`** | `interactiveMessage` | Tombol native flow (Quick Reply, CTA URL, CTA Copy, CTA Call, Dropdown List). |
+| **`TextMessage`** | `extendedTextMessage` | Teks terformat, markdown, toggle link preview, advanced link preview (v0.4.0), mention, dan quote. |
+| **`ButtonMessage`** | `interactiveMessage` | Tombol native flow (Quick Reply, CTA URL, CTA Copy, CTA Call, Dropdown List) dan konversi ke carousel card `.toCard()`. |
+| **`ButtonMessageV2`** | `buttonsMessage` | Pesan tombol klasik dengan trik `headerType: 6` (Location Header) agar tombol tetap muncul di WhatsApp klien lawas. |
 | **`LocationMessage`** | `interactiveMessage` | Kartu lokasi interaktif dengan pin 📍, judul tebal, deskripsi, thumbnail avatar, dan tombol aksi. |
 | **`ListMessage`** | `interactiveMessage` | Menu pop-up vertikal bertingkat dengan section, row pilihan, dan header media/lokasi. |
-| **`CarouselMessage`** | `interactiveMessage` | Kartu swipe horizontal multi-kartu dengan gambar dan tombol interaktif per kartu. |
+| **`CarouselMessage`** | `interactiveMessage` | Kartu swipe horizontal multi-kartu dengan gambar dan tombol interaktif per kartu, serta input array tombol. |
+| **`AlbumMessage`** | `albumMessage` | Koleksi foto dan video asli WhatsApp yang otomatis dikelompokkan ke dalam satu kartu grid album. |
+| **`OrderMessage`** | `orderMessage` | Kartu faktur dan ringkasan pesanan katalog resmi WhatsApp dengan rincian harga dan nominal mikro. |
+| **`StickerPackMessage`** | `stickerPackMessage` | Bundel paket stiker WhatsApp resmi lengkap dengan tray cover icon dan pemetaan emoji keyboard. |
 | **`MediaMessage`** | Unified Media | Satu builder terpadu untuk Gambar, Video, Audio/Voice Note (PTT), Dokumen, dan Stiker. |
 | **`StickerMessage`** | `stickerMessage` | Konversi stiker WebP statis/animasi dengan metadata EXIF nama pack & author. |
 | **`ProductMessage`** | `productMessage` | Kartu katalog produk resmi WhatsApp dengan mata uang, harga, dan ID retailer. |
 | **`PollMessage`** | `pollCreationMessage` | Polling interaktif WhatsApp dengan pilihan tunggal (single-choice) atau multi-choice. |
-| **`AIRichMessage`** | `interactiveMessage` | Kartu respon AI terstruktur dengan blok kode copyable, badge model, dan sitasi sumber. |
+| **`AIRichMessage`** | `interactiveMessage` | Kartu respon AI terstruktur dengan blok kode copyable, badge model, sitasi sumber, dan widget HTML interaktif. |
 | **`CanvasMessage`** | `interactiveMessage` | Generator payload antarmuka canvas HTML dengan whitelist domain aman. |
 | **`EventMessage`** | `eventMessage` | Undangan agenda kalender resmi WhatsApp Group Event dengan waktu mulai/selesai. |
 | **`RichMessage`** | `interactiveMessage` | Kartu visual serbaguna dengan header, body, footer, badge status, dan tombol aksi. |

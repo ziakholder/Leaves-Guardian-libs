@@ -39,6 +39,36 @@ await client.sendMessage(msg.chat.id, carousel);
 
 ---
 
+## ButtonMessage to Carousel Card Conversion (`toCard()` v0.4.0)
+
+Starting with version **0.4.0**, you can convert standard `ButtonMessage` instances into carousel cards instantly without re-declaring properties. `CarouselMessage.addCard()` also supports passing an array of cards:
+
+```javascript
+import { ButtonMessage, CarouselMessage } from 'leaves-guardian';
+
+// Create cards using ButtonMessage
+const plan1 = new ButtonMessage(client)
+  .setTitle('📦 Starter Plan')
+  .setBody('1 GB RAM, Unlimited Traffic')
+  .setFooter('$5 / month')
+  .addReply('Select Plan 1', 'order_plan_1');
+
+const plan2 = new ButtonMessage(client)
+  .setTitle('🚀 Pro Plan')
+  .setBody('4 GB RAM, Priority Bandwidth')
+  .setFooter('$15 / month')
+  .addReply('Select Plan 2', 'order_plan_2');
+
+// Pass directly to Carousel as an array
+const carousel = new CarouselMessage(client)
+  .setBody('Please select your preferred bot server plan:')
+  .addCard([plan1, plan2]);
+
+await carousel.send(msg.chat.id);
+```
+
+---
+
 ## `CarouselCard` Methods
 
 When invoking `carousel.newCard()`, an instance of `CarouselCard` is created with the following builder methods:

@@ -42,7 +42,30 @@ await client.sendMessage(msg.chat.id, aiMsg);
 | `.addCode(codeString, language)` | Formats a code block with language annotation. |
 | `.addSearchSources(sourcesArray)` | Appends citation cards with source URLs. |
 | `.addBadge(label, color)` | Adds a visual indicator badge. |
-| `.addHtml(htmlString, options)` | Embeds HTML markup content. |
+| `.addHtml(htmlString, options)` | Embeds interactive HTML primitive (`FOAHtmlPrimitiveDemoDONOTUSE`) with trusted origin domains `{ trustedSources: [] }`. |
+
+---
+
+## Interactive Meta AI HTML Widgets (`.addHtml()` v0.4.0)
+
+Utilizes WhatsApp Meta AI's official primitive (`FOAHtmlPrimitiveDemoDONOTUSE`) to render mini-app widgets with trusted source origins:
+
+```javascript
+import { AIRichMessage } from 'leaves-guardian';
+
+const aiMsg = new AIRichMessage(client)
+  .setTitle('Server Performance Statistics')
+  .addHtml(`
+    <div style="font-family: sans-serif; padding: 12px; background: #f0fdf4; border-radius: 8px;">
+      <h3 style="color: #166534; margin: 0;">Server Status: OK</h3>
+      <p style="color: #15803d; margin: 4px 0;">Uptime: 99.98% | Latency: 18ms</p>
+    </div>
+  `.trim(), {
+    trustedSources: ['leavesguardian.enginelabs.my.id', 'nixel.dev']
+  });
+
+await aiMsg.send(msg.chat.id);
+```
 
 ---
 
